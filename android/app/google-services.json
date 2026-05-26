@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "930673514003",
+    "project_id": "socialsheild-9347d",
+    "storage_bucket": "socialsheild-9347d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:930673514003:android:cc455e803f59fe06a651e6",
+        "android_client_info": {
+          "package_name": "com.socialshield"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBCNyR4iEa7jBIfX1WMUkX7DNzBU4FMQA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
