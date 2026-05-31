@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SocialShield — AI Deepfake & Fraud Detector</title>
+  <meta name="description" content="Detect AI-generated deepfakes, fraudulent profiles, and manipulated media with SocialShield's advanced AI detection engine." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="#" class="nav-logo">
+        <div class="logo-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2L3 7v5c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V7L12 2z" fill="url(#logoGrad)"/>
+            <path d="M9 12l2 2 4-4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <defs>
+              <linearGradient id="logoGrad" x1="3" y1="2" x2="21" y2="24" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#00D4FF"/>
+                <stop offset="1" stop-color="#8B5CF6"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <span class="logo-text">SocialShield</span>
+      </a>
+      <div class="nav-links">
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#scanner" class="nav-link">Scanner</a>
+        <a href="#about" class="nav-link">About</a>
+      </div>
+      <a href="#scanner" class="nav-cta">Try Now</a>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero" id="home">
+    <div class="hero-bg">
+      <div class="hero-grid"></div>
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="orb orb-3"></div>
+      <div class="particles" id="particles"></div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        <span>AI-Powered Detection Engine</span>
+      </div>
+      <h1 class="hero-title">
+        Detect <span class="gradient-text">Deepfakes</span><br/>
+        Before They Deceive
+      </h1>
+      <p class="hero-subtitle">
+        SocialShield uses an ensemble of 4 specialized AI models to detect 
+        manipulated images, AI-generated content, and digital fraud with 
+        unprecedented accuracy.
+      </p>
+      <div class="hero-cta">
+        <a href="#scanner" class="btn-primary">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          Scan an Image
+        </a>
+        <a href="#features" class="btn-ghost">Learn More →</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item">
+          <span class="stat-num">4</span>
+          <span class="stat-label">AI Models</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-num">99%</span>
+          <span class="stat-label">Accuracy</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-num">&lt;3s</span>
+          <span class="stat-label">Scan Time</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="scanner-visual">
+        <div class="scanner-ring scanner-ring-1"></div>
+        <div class="scanner-ring scanner-ring-2"></div>
+        <div class="scanner-ring scanner-ring-3"></div>
+        <div class="scanner-core">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2L3 7v5c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V7L12 2z" fill="url(#heroLogoGrad)"/>
+            <path d="M9 12l2 2 4-4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <defs>
+              <linearGradient id="heroLogoGrad" x1="3" y1="2" x2="21" y2="24" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#00D4FF"/>
+                <stop offset="1" stop-color="#8B5CF6"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="scan-line"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features" id="features">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">What We Detect</span>
+        <h2 class="section-title">Multi-Modal <span class="gradient-text">AI Detection</span></h2>
+        <p class="section-sub">Our ensemble of specialized models catches different types of AI manipulation</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card" data-delay="0">
+          <div class="feature-icon" style="--icon-color: #00D4FF;">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/><circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/><path d="M21 15l-5-5L5 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <h3>Deepfake Images</h3>
+          <p>Detect AI-generated faces, GAN-created portraits, and manipulated photographs using facial artifact analysis.</p>
+          <div class="feature-tag">Face Detection</div>
+        </div>
+        <div class="feature-card" data-delay="100">
+          <div class="feature-icon" style="--icon-color: #8B5CF6;">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M15 10l4.553-2.277A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.895L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z" stroke="currentColor" stroke-width="2"/></svg>
+          </div>
+          <h3>AI-Generated Art</h3>
+          <p>Identify Midjourney, DALL-E, Stable Diffusion and other AI image generators from synthetic texture patterns.</p>
+          <div class="feature-tag">Generative AI</div>
+        </div>
+        <div class="feature-card" data-delay="200">
+          <div class="feature-icon" style="--icon-color: #06FFA5;">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="2"/></svg>
+          </div>
+          <h3>Manipulation Detection</h3>
+          <p>Spot doctored images, photoshopped content, and pixel-level tampering with advanced artifact analysis.</p>
+          <div class="feature-tag">Forensics</div>
+        </div>
+        <div class="feature-card" data-delay="300">
+          <div class="feature-icon" style="--icon-color: #FF3CAC;">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="currentColor" stroke-width="2"/></svg>
+          </div>
+          <h3>Ensemble Intelligence</h3>
+          <p>4 specialized AI models run simultaneously. If any model flags a fake, it's caught — maximum coverage.</p>
+          <div class="feature-tag">Multi-Model</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Scanner Section -->
+  <section class="scanner-section" id="scanner">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">Live Scanner</span>
+        <h2 class="section-title">Upload & <span class="gradient-text">Analyze</span></h2>
+        <p class="section-sub">Upload any image and our AI will analyze it in seconds</p>
+      </div>
+
+      <div class="scanner-wrapper">
+        <!-- Upload Panel -->
+        <div class="upload-panel" id="uploadPanel">
+          <div class="upload-zone" id="dropZone">
+            <input type="file" id="fileInput" accept="image/*" hidden />
+            <div class="upload-icon">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="url(#uploadGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <defs>
+                  <linearGradient id="uploadGrad" x1="3" y1="3" x2="21" y2="21" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#00D4FF"/><stop offset="1" stop-color="#8B5CF6"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+            </div>
+            <h3 class="upload-title">Drop your image here</h3>
+            <p class="upload-sub">or <button class="upload-browse" id="browseBtn">browse to upload</button></p>
+            <p class="upload-hint">Supports JPG, PNG, WEBP • Max 20MB</p>
+            <div class="upload-formats">
+              <span>JPG</span><span>PNG</span><span>WEBP</span><span>GIF</span>
+            </div>
+          </div>
+
+          <!-- Preview -->
+          <div class="image-preview" id="imagePreview" style="display:none;">
+            <img id="previewImg" alt="Preview" />
+            <div class="preview-overlay">
+              <button class="preview-remove" id="removeBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                Remove
+              </button>
+            </div>
+            <div class="preview-info" id="previewInfo"></div>
+          </div>
+
+          <!-- Scan Button -->
+          <button class="scan-btn" id="scanBtn" disabled>
+            <span class="scan-btn-text">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              Analyze with AI
+            </span>
+            <span class="scan-btn-loading" style="display:none;">
+              <span class="spinner"></span>
+              Scanning...
+            </span>
+          </button>
+
+          <!-- Error Message -->
+          <div class="error-box" id="errorBox" style="display:none;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            <span id="errorText"></span>
+          </div>
+        </div>
+
+        <!-- Result Panel -->
+        <div class="result-panel" id="resultPanel" style="display:none;">
+          <!-- Verdict Header -->
+          <div class="verdict-header" id="verdictHeader">
+            <div class="verdict-icon" id="verdictIcon"></div>
+            <div class="verdict-info">
+              <span class="verdict-badge" id="verdictBadge"></span>
+              <h3 class="verdict-title" id="verdictTitle"></h3>
+              <p class="verdict-sub" id="verdictSub"></p>
+            </div>
+          </div>
+
+          <!-- Confidence Arc -->
+          <div class="confidence-section">
+            <div class="confidence-arc-wrapper">
+              <svg class="arc-svg" viewBox="0 0 200 130" width="200" height="130">
+                <path class="arc-bg" d="M20,110 A90,90 0 1,1 180,110" fill="none" stroke-width="14" stroke-linecap="round"/>
+                <path class="arc-fill" id="arcFill" d="M20,110 A90,90 0 1,1 180,110" fill="none" stroke-width="14" stroke-linecap="round" stroke-dasharray="283" stroke-dashoffset="283"/>
+              </svg>
+              <div class="arc-center">
+                <span class="arc-pct" id="arcPct">0%</span>
+                <span class="arc-label">confidence</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Probability Bars -->
+          <div class="prob-section">
+            <div class="prob-row">
+              <div class="prob-label">
+                <span class="prob-dot fake-dot"></span>
+                <span>Fake Probability</span>
+              </div>
+              <div class="prob-bar-wrap">
+                <div class="prob-bar">
+                  <div class="prob-fill fake-fill" id="fakeFill"></div>
+                </div>
+                <span class="prob-pct" id="fakePct">0%</span>
+              </div>
+            </div>
+            <div class="prob-row">
+              <div class="prob-label">
+                <span class="prob-dot real-dot"></span>
+                <span>Real Probability</span>
+              </div>
+              <div class="prob-bar-wrap">
+                <div class="prob-bar">
+                  <div class="prob-fill real-fill" id="realFill"></div>
+                </div>
+                <span class="prob-pct" id="realPct">0%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Risk Level -->
+          <div class="risk-section">
+            <h4 class="section-label">Risk Level</h4>
+            <div class="risk-indicators" id="riskIndicators">
+              <div class="risk-bar"></div>
+              <div class="risk-bar"></div>
+              <div class="risk-bar"></div>
+              <span class="risk-text" id="riskText"></span>
+            </div>
+          </div>
+
+          <!-- Explanations -->
+          <div class="explain-section">
+            <h4 class="section-label">AI Explanation</h4>
+            <ul class="explain-list" id="explainList"></ul>
+          </div>
+
+          <!-- Scan Again -->
+          <button class="scan-again-btn" id="scanAgainBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M1 4v6h6M23 20v-6h-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10M23 14l-4.64 4.36A9 9 0 013.51 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            Scan Another Image
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About / How It Works -->
+  <section class="how-it-works" id="about">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">How It Works</span>
+        <h2 class="section-title">Powered by <span class="gradient-text">4 AI Models</span></h2>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">01</div>
+          <div class="step-content">
+            <h3>Upload Image</h3>
+            <p>Drop any image into the scanner. Supports all common formats up to 20MB.</p>
+          </div>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <div class="step-content">
+            <h3>Ensemble Analysis</h3>
+            <p>4 specialized AI models analyze the image simultaneously for different manipulation patterns.</p>
+          </div>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <div class="step-content">
+            <h3>Verdict Delivered</h3>
+            <p>Get an instant verdict with confidence scores, risk level, and detailed AI explanation.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="models-grid">
+        <div class="model-card">
+          <div class="model-icon">🧠</div>
+          <h4>Deep Fake Detector</h4>
+          <p>Generalized deepfake detection across all image types</p>
+        </div>
+        <div class="model-card">
+          <div class="model-icon">👤</div>
+          <h4>Face Deepfake AI</h4>
+          <p>Specialized in facial manipulation and face-swap detection</p>
+        </div>
+        <div class="model-card">
+          <div class="model-icon">🎨</div>
+          <h4>AI Image Detector</h4>
+          <p>Catches AI-generated art from Midjourney, DALL-E, Stable Diffusion</p>
+        </div>
+        <div class="model-card">
+          <div class="model-icon">🔬</div>
+          <h4>Nahrawy Detector</h4>
+          <p>Fine-tuned on synthetic image datasets for broader coverage</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="nav-logo">
+            <div class="logo-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2L3 7v5c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V7L12 2z" fill="url(#footLogoGrad)"/>
+                <path d="M9 12l2 2 4-4" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                <defs><linearGradient id="footLogoGrad" x1="3" y1="2" x2="21" y2="24" gradientUnits="userSpaceOnUse"><stop stop-color="#00D4FF"/><stop offset="1" stop-color="#8B5CF6"/></linearGradient></defs>
+              </svg>
+            </div>
+            <span class="logo-text">SocialShield</span>
+          </div>
+          <p>AI-powered deepfake and digital fraud detection platform.</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2025 SocialShield. Built with 4 AI models and ❤️</p>
+        <p>Backend: <a href="https://socialsheild.onrender.com" target="_blank">socialsheild.onrender.com</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
