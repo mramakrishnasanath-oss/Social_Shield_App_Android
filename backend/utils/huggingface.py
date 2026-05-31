@@ -19,7 +19,8 @@ async def scan_image_with_hf(image_bytes: bytes) -> dict:
         logger.warning("No HuggingFace API key found.")
         return None
 
-    API_URL = "https://api-inference.huggingface.co/models/dvilasuero/deepfake-detection"
+    # Using a more robust model that explicitly outputs 'Fake' and 'Real'
+    API_URL = "https://api-inference.huggingface.co/models/prithivMLmods/Deep-Fake-Detector-Model"
     headers = {"Authorization": f"Bearer {HF_API_KEY}"}
 
     try:
