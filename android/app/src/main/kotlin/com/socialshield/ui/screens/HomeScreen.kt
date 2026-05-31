@@ -63,7 +63,7 @@ fun HomeScreen(
         item {
             Text(
                 "Scan & Detect",
-                color = Color.White,
+                color = Color(0xFF0F172A),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(horizontal = 20.dp)
@@ -112,7 +112,7 @@ fun HomeScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("Recent Scans", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                    Text("Recent Scans", color = Color(0xFF0F172A), fontSize = 18.sp, fontWeight = FontWeight.Bold)
                     TextButton(onClick = onHistoryClick) {
                         Text("View All", color = NeonBlue, fontSize = 13.sp)
                     }
@@ -124,7 +124,6 @@ fun HomeScreen(
                 RecentScanItem(
                     mediaType = scan.mediaType,
                     verdict = scan.verdict,
-                    confidence = scan.confidence,
                     timestamp = scan.timestamp,
                     modifier = Modifier.padding(horizontal = 20.dp, vertical = 4.dp)
                 )
@@ -152,10 +151,10 @@ fun HomeHeader(userName: String, trustScore: Int, totalScans: Int) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column {
-                    Text("Welcome back", color = Color.White.copy(0.6f), fontSize = 13.sp)
+                    Text("Welcome back", color = Color(0xFF0F172A).copy(0.6f), fontSize = 13.sp)
                     Text(
                         userName.ifEmpty { "Shield User" },
-                        color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold
+                        color = Color(0xFF0F172A), fontSize = 22.sp, fontWeight = FontWeight.Bold
                     )
                 }
                 Box(
@@ -191,7 +190,7 @@ fun HomeHeader(userName: String, trustScore: Int, totalScans: Int) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column {
-                        Text("AI Trust Score", color = Color.White.copy(0.7f), fontSize = 12.sp, letterSpacing = 1.sp)
+                        Text("AI Trust Score", color = Color(0xFF0F172A).copy(0.7f), fontSize = 12.sp, letterSpacing = 1.sp)
                         Spacer(Modifier.height(4.dp))
                         Row(verticalAlignment = Alignment.Bottom) {
                             Text(
@@ -205,7 +204,7 @@ fun HomeHeader(userName: String, trustScore: Int, totalScans: Int) {
                                 fontWeight = FontWeight.Black,
                                 lineHeight = 48.sp
                             )
-                            Text("/100", color = Color.White.copy(0.4f), fontSize = 18.sp, modifier = Modifier.padding(bottom = 6.dp, start = 4.dp))
+                            Text("/100", color = Color(0xFF0F172A).copy(0.4f), fontSize = 18.sp, modifier = Modifier.padding(bottom = 6.dp, start = 4.dp))
                         }
                         Text(
                             when {
@@ -213,13 +212,13 @@ fun HomeHeader(userName: String, trustScore: Int, totalScans: Int) {
                                 trustScore >= 50 -> "Moderate risk detected"
                                 else -> "High threat exposure"
                             },
-                            color = Color.White.copy(0.6f), fontSize = 12.sp
+                            color = Color(0xFF0F172A).copy(0.6f), fontSize = 12.sp
                         )
                     }
 
                     Column(horizontalAlignment = Alignment.End) {
                         Text("$totalScans", color = NeonBlue, fontSize = 28.sp, fontWeight = FontWeight.Bold)
-                        Text("total scans", color = Color.White.copy(0.5f), fontSize = 11.sp)
+                        Text("total scans", color = Color(0xFF0F172A).copy(0.5f), fontSize = 11.sp)
                         Spacer(Modifier.height(8.dp))
                         Icon(Icons.Default.Shield, null, tint = NeonBlue.copy(0.3f), modifier = Modifier.size(48.dp))
                     }
@@ -248,7 +247,7 @@ fun StatChip(label: String, value: String, color: Color, modifier: Modifier = Mo
     ) {
         Column {
             Text(value, color = color, fontSize = 22.sp, fontWeight = FontWeight.Bold)
-            Text(label, color = Color.White.copy(0.6f), fontSize = 11.sp)
+            Text(label, color = Color(0xFF0F172A).copy(0.6f), fontSize = 11.sp)
         }
     }
 }
@@ -306,7 +305,7 @@ fun QuickActionCard(
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         Icon(icon, null, tint = color, modifier = Modifier.size(22.dp))
-        Text(label, color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.Medium)
+        Text(label, color = Color(0xFF0F172A), fontSize = 13.sp, fontWeight = FontWeight.Medium)
     }
 }
 
@@ -314,7 +313,6 @@ fun QuickActionCard(
 fun RecentScanItem(
     mediaType: String,
     verdict: String,
-    confidence: Float,
     timestamp: String,
     modifier: Modifier = Modifier
 ) {
@@ -350,8 +348,8 @@ fun RecentScanItem(
             Icon(icon, null, tint = verdictColor, modifier = Modifier.size(20.dp))
         }
         Column(modifier = Modifier.weight(1f)) {
-            Text(mediaType, color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
-            Text(timestamp.take(16).replace("T", " "), color = Color.White.copy(0.5f), fontSize = 11.sp)
+            Text(mediaType, color = Color(0xFF0F172A), fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+            Text(timestamp.take(16).replace("T", " "), color = Color(0xFF0F172A).copy(0.5f), fontSize = 11.sp)
         }
         VerdictBadge(verdict)
     }

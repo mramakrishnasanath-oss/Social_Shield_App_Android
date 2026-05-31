@@ -54,7 +54,7 @@ fun ResultScreen(
             ) {
                 Icon(Icons.Default.ErrorOutline, null, tint = RiskHigh, modifier = Modifier.size(48.dp))
                 Spacer(Modifier.height(16.dp))
-                Text(error!!, color = Color.White, fontSize = 16.sp)
+                Text(error!!, color = Color(0xFF0F172A), fontSize = 16.sp)
                 Spacer(Modifier.height(24.dp))
                 NeonButton(text = "Go Back", onClick = onBack)
             }
@@ -86,9 +86,9 @@ fun ResultScreen(
                         onClick = onBack,
                         modifier = Modifier.size(40.dp).clip(CircleShape).background(GlassWhite)
                     ) {
-                        Icon(Icons.Default.ArrowBack, null, tint = Color.White, modifier = Modifier.size(20.dp))
+                        Icon(Icons.Default.ArrowBack, null, tint = Color(0xFF0F172A), modifier = Modifier.size(20.dp))
                     }
-                    Text("Scan Result", color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                    Text("Scan Result", color = Color(0xFF0F172A), fontSize = 20.sp, fontWeight = FontWeight.Bold)
                 }
 
                 // Big verdict section
@@ -147,12 +147,12 @@ fun ResultScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Column {
-                                Text("Risk Level", color = Color.White.copy(0.6f), fontSize = 12.sp)
+                                Text("Risk Level", color = Color(0xFF0F172A).copy(0.6f), fontSize = 12.sp)
                                 Spacer(Modifier.height(8.dp))
                                 RiskIndicator(r.riskLevel)
                             }
                             Column(horizontalAlignment = Alignment.End) {
-                                Text("Fake Probability", color = Color.White.copy(0.6f), fontSize = 12.sp)
+                                Text("Fake Probability", color = Color(0xFF0F172A).copy(0.6f), fontSize = 12.sp)
                                 Text(
                                     "${r.fakeProbability.toInt()}%",
                                     color = verdictColor,
@@ -165,7 +165,7 @@ fun ResultScreen(
 
                     // Probability bars
                     GlassCard {
-                        Text("Probability Analysis", color = Color.White, fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
+                        Text("Probability Analysis", color = Color(0xFF0F172A), fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
                         Spacer(Modifier.height(16.dp))
                         ProbabilityBar(label = "Fake", value = r.fakeProbability, color = RiskHigh)
                         Spacer(Modifier.height(8.dp))
@@ -181,8 +181,8 @@ fun ResultScreen(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Column {
-                                    Text("Manipulation Heatmap", color = Color.White, fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
-                                    Text("Red areas indicate manipulation", color = Color.White.copy(0.5f), fontSize = 12.sp)
+                                    Text("Manipulation Heatmap", color = Color(0xFF0F172A), fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
+                                    Text("Red areas indicate manipulation", color = Color(0xFF0F172A).copy(0.5f), fontSize = 12.sp)
                                 }
                                 TextButton(onClick = { showHeatmap = !showHeatmap }) {
                                     Text(if (showHeatmap) "Hide" else "Show", color = NeonBlue, fontSize = 13.sp)
@@ -215,7 +215,7 @@ fun ResultScreen(
                             horizontalArrangement = Arrangement.spacedBy(10.dp)
                         ) {
                             Icon(Icons.Default.Psychology, null, tint = NeonBlue, modifier = Modifier.size(20.dp))
-                            Text("AI Explanation", color = Color.White, fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
+                            Text("AI Explanation", color = Color(0xFF0F172A), fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
                         }
                         Spacer(Modifier.height(14.dp))
                         r.explanations.forEach { explanation ->
@@ -230,7 +230,7 @@ fun ResultScreen(
                                 )
                                 Text(
                                     explanation,
-                                    color = Color.White.copy(0.85f),
+                                    color = Color(0xFF0F172A).copy(0.85f),
                                     fontSize = 14.sp,
                                     lineHeight = 20.sp
                                 )
@@ -241,7 +241,7 @@ fun ResultScreen(
                     // Metadata
                     r.metadata?.let { meta ->
                         GlassCard {
-                            Text("Technical Details", color = Color.White.copy(0.7f), fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
+                            Text("Technical Details", color = Color(0xFF0F172A).copy(0.7f), fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
                             Spacer(Modifier.height(10.dp))
                             meta.entries.take(5).forEach { (key, value) ->
                                 if (value !is Map<*, *> && value !is List<*>) {
@@ -249,8 +249,8 @@ fun ResultScreen(
                                         modifier = Modifier.fillMaxWidth().padding(vertical = 2.dp),
                                         horizontalArrangement = Arrangement.SpaceBetween
                                     ) {
-                                        Text(key.replace("_", " ").replaceFirstChar { it.uppercase() }, color = Color.White.copy(0.5f), fontSize = 12.sp)
-                                        Text("$value", color = Color.White.copy(0.8f), fontSize = 12.sp)
+                                        Text(key.replace("_", " ").replaceFirstChar { it.uppercase() }, color = Color(0xFF0F172A).copy(0.5f), fontSize = 12.sp)
+                                        Text("$value", color = Color(0xFF0F172A).copy(0.8f), fontSize = 12.sp)
                                     }
                                 }
                             }
@@ -260,7 +260,7 @@ fun ResultScreen(
                     // Scan ID
                     Text(
                         "Scan ID: ${scanId.take(8)}…",
-                        color = Color.White.copy(0.3f),
+                        color = Color(0xFF0F172A).copy(0.3f),
                         fontSize = 11.sp,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth()
@@ -273,7 +273,7 @@ fun ResultScreen(
                             modifier = Modifier.weight(1f).height(48.dp),
                             shape = RoundedCornerShape(24.dp),
                             border = BorderStroke(1.dp, GlassBorder),
-                            colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White)
+                            colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFF0F172A))
                         ) {
                             Text("← Back")
                         }
@@ -297,7 +297,7 @@ fun ProbabilityBar(label: String, value: Float, color: Color) {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(label, color = Color.White.copy(0.7f), fontSize = 13.sp)
+            Text(label, color = Color(0xFF0F172A).copy(0.7f), fontSize = 13.sp)
             Text("${value.toInt()}%", color = color, fontSize = 13.sp, fontWeight = FontWeight.Bold)
         }
         Spacer(Modifier.height(6.dp))

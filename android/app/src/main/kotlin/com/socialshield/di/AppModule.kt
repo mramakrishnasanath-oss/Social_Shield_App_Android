@@ -36,7 +36,7 @@ object AppModule {
         .addInterceptor(HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         })
-        .connectTimeout(30, TimeUnit.SECONDS)
+        .connectTimeout(10, TimeUnit.SECONDS)
         .readTimeout(120, TimeUnit.SECONDS)   // Long timeout for video/model inference
         .writeTimeout(120, TimeUnit.SECONDS)
         .build()

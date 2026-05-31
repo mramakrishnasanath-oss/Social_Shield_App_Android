@@ -16,16 +16,16 @@ import androidx.compose.ui.unit.sp
 
 // ─── Cybersecurity Color Palette ─────────────────────────────────────────────
 
-val NeonBlue = Color(0xFF00D4FF)
-val NeonPurple = Color(0xFF8B5CF6)
-val NeonCyan = Color(0xFF06FFA5)
-val NeonPink = Color(0xFFFF3CAC)
-val DeepBlack = Color(0xFF050510)
-val DarkSurface = Color(0xFF0D0D2B)
-val DarkCard = Color(0xFF12123A)
-val DarkElevated = Color(0xFF1A1A4E)
-val GlassWhite = Color(0x1AFFFFFF)
-val GlassBorder = Color(0x33FFFFFF)
+val NeonBlue = Color(0xFF2563EB) // Royal Blue
+val NeonPurple = Color(0xFF7C3AED) // Deep Purple
+val NeonCyan = Color(0xFF059669) // Emerald
+val NeonPink = Color(0xFFDB2777) // Pink
+val DeepBlack = Color(0xFFFFFFFF) // White background (names kept to avoid breaking refs)
+val DarkSurface = Color(0xFFF8FAFC) // Light Gray Surface
+val DarkCard = Color(0xFFF1F5F9) // Light Card
+val DarkElevated = Color(0xFFE2E8F0) // Elevated Light Card
+val GlassWhite = Color(0x1A000000) // Dark Glass (inverted)
+val GlassBorder = Color(0x26000000) // Dark Glass Border (inverted)
 
 // Risk colors
 val RiskHigh = Color(0xFFFF3B3B)
@@ -44,42 +44,42 @@ private val DarkColorScheme = darkColorScheme(
     primaryContainer = Color(0xFF001F3D),
     onPrimaryContainer = NeonBlue,
     secondary = NeonPurple,
-    onSecondary = Color.White,
+    onSecondary = Color(0xFF0F172A),
     secondaryContainer = Color(0xFF2A1060),
     onSecondaryContainer = NeonPurple,
     tertiary = NeonCyan,
     onTertiary = DeepBlack,
     background = DeepBlack,
-    onBackground = Color.White,
+    onBackground = Color(0xFF0F172A),
     surface = DarkSurface,
-    onSurface = Color.White,
+    onSurface = Color(0xFF0F172A),
     surfaceVariant = DarkCard,
     onSurfaceVariant = Color(0xFFB0B0D0),
     outline = GlassBorder,
     error = RiskHigh,
-    onError = Color.White
+    onError = Color(0xFF0F172A)
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = Color(0xFF0066CC),
-    onPrimary = Color.White,
+    onPrimary = Color(0xFF0F172A),
     primaryContainer = Color(0xFFD6EAFF),
     onPrimaryContainer = Color(0xFF001D36),
     secondary = Color(0xFF6B4EBE),
-    onSecondary = Color.White,
+    onSecondary = Color(0xFF0F172A),
     secondaryContainer = Color(0xFFECE0FF),
     onSecondaryContainer = Color(0xFF1E005A),
     tertiary = Color(0xFF007A57),
-    onTertiary = Color.White,
+    onTertiary = Color(0xFF0F172A),
     background = Color(0xFFF0F4FF),
     onBackground = Color(0xFF0A0A1A),
-    surface = Color.White,
+    surface = Color(0xFF0F172A),
     onSurface = Color(0xFF0A0A1A),
     surfaceVariant = Color(0xFFE8EEFF),
     onSurfaceVariant = Color(0xFF44444F),
     outline = Color(0xFFCCCCDD),
     error = Color(0xFFCC0000),
-    onError = Color.White
+    onError = Color(0xFF0F172A)
 )
 
 // ─── Typography ───────────────────────────────────────────────────────────────

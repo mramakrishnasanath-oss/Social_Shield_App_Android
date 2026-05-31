@@ -111,7 +111,7 @@ fun OnboardingScreen(onGetStarted: () -> Unit) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     TextButton(onClick = onGetStarted) {
-                        Text("Skip", color = Color.White.copy(0.5f), fontSize = 14.sp)
+                        Text("Skip", color = Color(0xFF0F172A).copy(0.5f), fontSize = 14.sp)
                     }
                     NeonButton(
                         text = "Next →",
@@ -164,7 +164,7 @@ fun OnboardingPageContent(page: OnboardingPage) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
                     page.title,
-                    color = Color.White,
+                    color = Color(0xFF0F172A),
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
@@ -173,7 +173,7 @@ fun OnboardingPageContent(page: OnboardingPage) {
                 Spacer(Modifier.height(16.dp))
                 Text(
                     page.subtitle,
-                    color = Color.White.copy(0.65f),
+                    color = Color(0xFF0F172A).copy(0.65f),
                     fontSize = 15.sp,
                     textAlign = TextAlign.Center,
                     lineHeight = 22.sp
@@ -191,7 +191,7 @@ fun OnboardingPageContent(page: OnboardingPage) {
                             modifier = Modifier.size(8.dp).clip(CircleShape)
                                 .background(page.iconColor)
                         )
-                        Text(feature, color = Color.White.copy(0.75f), fontSize = 14.sp)
+                        Text(feature, color = Color(0xFF0F172A).copy(0.75f), fontSize = 14.sp)
                     }
                 }
             }

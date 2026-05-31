@@ -52,12 +52,6 @@ fun NeonButton(
     isLoading: Boolean = false
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "glow")
-    val glowAlpha by infiniteTransition.animateFloat(
-        initialValue = 0.4f, targetValue = 0.9f,
-        animationSpec = infiniteRepeatable(tween(1200), RepeatMode.Reverse),
-        label = "glow_alpha"
-    )
-
     Box(
         modifier = modifier
             .height(52.dp)
@@ -131,8 +125,8 @@ fun ScanTypeCard(
                 Icon(icon, contentDescription = null, tint = color, modifier = Modifier.size(24.dp))
             }
             Spacer(Modifier.height(12.dp))
-            Text(title, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 16.sp)
-            Text(subtitle, color = Color.White.copy(0.6f), fontSize = 12.sp)
+            Text(title, color = Color(0xFF0F172A), fontWeight = FontWeight.Bold, fontSize = 16.sp)
+            Text(subtitle, color = Color(0xFF0F172A).copy(0.6f), fontSize = 12.sp)
         }
     }
 }
@@ -183,7 +177,7 @@ fun ConfidenceArc(
             )
             // Background track
             drawArc(
-                color = Color.White.copy(0.08f),
+                color = Color(0xFF0F172A).copy(0.08f),
                 startAngle = 135f, sweepAngle = 270f,
                 useCenter = false, topLeft = arcRect.topLeft,
                 size = arcRect.size,
@@ -205,7 +199,7 @@ fun ConfidenceArc(
                 fontWeight = FontWeight.Black,
                 fontSize = 32.sp
             )
-            Text("confidence", color = Color.White.copy(0.5f), fontSize = 12.sp)
+            Text("confidence", color = Color(0xFF0F172A).copy(0.5f), fontSize = 12.sp)
         }
     }
 }

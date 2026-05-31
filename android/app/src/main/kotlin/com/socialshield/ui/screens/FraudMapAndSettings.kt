@@ -43,9 +43,6 @@ private val SAMPLE_REPORTS = listOf(
 
 @Composable
 fun FraudMapScreen(onBack: () -> Unit) {
-    var selectedType by remember { mutableStateOf("ALL") }
-    val types = listOf("ALL", "Phishing", "Deepfake", "Voice Clone", "Fake Profile")
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -57,11 +54,11 @@ fun FraudMapScreen(onBack: () -> Unit) {
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             IconButton(onClick = onBack, modifier = Modifier.size(40.dp).clip(CircleShape).background(GlassWhite)) {
-                Icon(Icons.Default.ArrowBack, null, tint = Color.White, modifier = Modifier.size(20.dp))
+                Icon(Icons.Default.ArrowBack, null, tint = Color(0xFF0F172A), modifier = Modifier.size(20.dp))
             }
             Column {
-                Text("Global Fraud Map", color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                Text("Live threat intelligence", color = Color.White.copy(0.5f), fontSize = 12.sp)
+                Text("Global Fraud Map", color = Color(0xFF0F172A), fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                Text("Live threat intelligence", color = Color(0xFF0F172A).copy(0.5f), fontSize = 12.sp)
             }
         }
 
@@ -80,7 +77,7 @@ fun FraudMapScreen(onBack: () -> Unit) {
                 }
                 Column(horizontalAlignment = Alignment.End) {
                     Text("10,247", color = NeonBlue, fontSize = 18.sp, fontWeight = FontWeight.Bold)
-                    Text("reports today", color = Color.White.copy(0.5f), fontSize = 10.sp)
+                    Text("reports today", color = Color(0xFF0F172A).copy(0.5f), fontSize = 10.sp)
                 }
             }
         }
@@ -121,12 +118,12 @@ fun FraudMapScreen(onBack: () -> Unit) {
                     drawCircle(color, radius = 6f, center = Offset(size.width * pos.x, size.height * pos.y))
                 }
             }
-            Text("Interactive Map · Tap reports for details", color = Color.White.copy(0.3f), fontSize = 11.sp)
+            Text("Interactive Map · Tap reports for details", color = Color(0xFF0F172A).copy(0.3f), fontSize = 11.sp)
         }
 
         Spacer(Modifier.height(16.dp))
 
-        Text("Top Fraud Hotspots", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 16.dp))
+        Text("Top Fraud Hotspots", color = Color(0xFF0F172A), fontSize = 16.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 16.dp))
         Spacer(Modifier.height(8.dp))
 
         LazyColumn(
@@ -149,12 +146,12 @@ fun FraudMapScreen(onBack: () -> Unit) {
                         Icon(Icons.Default.Warning, null, tint = color, modifier = Modifier.size(20.dp))
                     }
                     Column(modifier = Modifier.weight(1f)) {
-                        Text("${report.city}, ${report.country}", color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
-                        Text(report.type, color = Color.White.copy(0.5f), fontSize = 12.sp)
+                        Text("${report.city}, ${report.country}", color = Color(0xFF0F172A), fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+                        Text(report.type, color = Color(0xFF0F172A).copy(0.5f), fontSize = 12.sp)
                     }
                     Column(horizontalAlignment = Alignment.End) {
                         Text("${report.count}", color = color, fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                        Text("reports", color = Color.White.copy(0.4f), fontSize = 10.sp)
+                        Text("reports", color = Color(0xFF0F172A).copy(0.4f), fontSize = 10.sp)
                     }
                 }
             }
@@ -183,9 +180,9 @@ fun SettingsScreen(onBack: () -> Unit, onSignOut: () -> Unit) {
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             IconButton(onClick = onBack, modifier = Modifier.size(40.dp).clip(CircleShape).background(GlassWhite)) {
-                Icon(Icons.Default.ArrowBack, null, tint = Color.White, modifier = Modifier.size(20.dp))
+                Icon(Icons.Default.ArrowBack, null, tint = Color(0xFF0F172A), modifier = Modifier.size(20.dp))
             }
-            Text("Settings", color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            Text("Settings", color = Color(0xFF0F172A), fontSize = 20.sp, fontWeight = FontWeight.Bold)
         }
 
         Column(
@@ -214,8 +211,8 @@ fun SettingsScreen(onBack: () -> Unit, onSignOut: () -> Unit) {
                                 Icon(Icons.Default.Person, null, tint = NeonBlue, modifier = Modifier.size(24.dp))
                             }
                             Column {
-                                Text(user?.displayName ?: "Shield User", color = Color.White, fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
-                                Text(user?.email ?: "", color = Color.White.copy(0.5f), fontSize = 12.sp)
+                                Text(user?.displayName ?: "Shield User", color = Color(0xFF0F172A), fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
+                                Text(user?.email ?: "", color = Color(0xFF0F172A).copy(0.5f), fontSize = 12.sp)
                             }
                         }
                         HorizontalDivider(color = GlassBorder)
@@ -237,8 +234,8 @@ fun SettingsScreen(onBack: () -> Unit, onSignOut: () -> Unit) {
             // App info
             GlassCard {
                 Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
-                    Text("SocialShield", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                    Text("Version 1.0.0", color = Color.White.copy(0.5f), fontSize = 13.sp)
+                    Text("SocialShield", color = Color(0xFF0F172A), fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                    Text("Version 1.0.0", color = Color(0xFF0F172A).copy(0.5f), fontSize = 13.sp)
                     Spacer(Modifier.height(4.dp))
                     Text("AI-Powered Digital Fraud Protection", color = NeonBlue.copy(0.7f), fontSize = 12.sp)
                 }
@@ -274,16 +271,16 @@ fun SettingsToggle(
                 Icon(icon, null, tint = color, modifier = Modifier.size(20.dp))
             }
             Column(modifier = Modifier.weight(1f)) {
-                Text(title, color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Medium)
-                Text(subtitle, color = Color.White.copy(0.5f), fontSize = 11.sp, lineHeight = 14.sp)
+                Text(title, color = Color(0xFF0F172A), fontSize = 14.sp, fontWeight = FontWeight.Medium)
+                Text(subtitle, color = Color(0xFF0F172A).copy(0.5f), fontSize = 11.sp, lineHeight = 14.sp)
             }
             Switch(
                 checked = checked,
                 onCheckedChange = onCheckedChange,
                 colors = SwitchDefaults.colors(
-                    checkedThumbColor = Color.White,
+                    checkedThumbColor = Color(0xFF0F172A),
                     checkedTrackColor = color,
-                    uncheckedThumbColor = Color.White.copy(0.5f),
+                    uncheckedThumbColor = Color(0xFF0F172A).copy(0.5f),
                     uncheckedTrackColor = GlassWhite
                 )
             )

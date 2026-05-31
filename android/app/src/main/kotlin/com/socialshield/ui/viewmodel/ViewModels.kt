@@ -13,6 +13,7 @@ import com.socialshield.domain.models.ScanHistoryItem
 import com.socialshield.domain.models.ScanResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -131,7 +132,7 @@ class ScanViewModel @Inject constructor(
     fun scanUrl(url: String) = scan { repo.scanUrl(url) }
     fun scanProfile(data: Map<String, Any>) = scan { repo.scanProfile(data) }
 
-    private fun scan(block: suspend () -> ApiResult<ScanResult>) = viewModelScope.launch {
+    private fun scan(block: suspend () -> ApiResult<ScanResult>) = viewModelScope.launch(Dispatchers.IO) {
         _uiState.update { it.copy(isScanning = true, error = null, scanId = null) }
         when (val result = block()) {
             is ApiResult.Success -> _uiState.update { it.copy(isScanning = false, scanId = result.data.scanId) }

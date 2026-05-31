@@ -79,11 +79,11 @@ fun ScanScreen(
                         .clip(CircleShape)
                         .background(GlassWhite)
                 ) {
-                    Icon(Icons.Default.ArrowBack, null, tint = Color.White, modifier = Modifier.size(20.dp))
+                    Icon(Icons.Default.ArrowBack, null, tint = Color(0xFF0F172A), modifier = Modifier.size(20.dp))
                 }
                 Text(
                     scanType.displayName,
-                    color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold
+                    color = Color(0xFF0F172A), fontSize = 20.sp, fontWeight = FontWeight.Bold
                 )
             }
 
@@ -193,7 +193,7 @@ fun ScanScreen(
                         Icon(Icons.Default.Info, null, tint = NeonBlue.copy(0.7f), modifier = Modifier.size(18.dp))
                         Text(
                             scanType.infoText,
-                            color = Color.White.copy(0.65f),
+                            color = Color(0xFF0F172A).copy(0.65f),
                             fontSize = 12.sp,
                             lineHeight = 18.sp
                         )
@@ -240,7 +240,7 @@ fun MediaDropZone(
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Icon(Icons.Default.CheckCircle, null, tint = RiskLow, modifier = Modifier.size(36.dp))
                     Spacer(Modifier.height(8.dp))
-                    Text("File selected — tap to change", color = Color.White, fontSize = 13.sp)
+                    Text("File selected — tap to change", color = Color(0xFF0F172A), fontSize = 13.sp)
                 }
             }
         } else {
@@ -255,9 +255,9 @@ fun MediaDropZone(
                     Icon(icon, null, tint = color, modifier = Modifier.size(36.dp))
                 }
                 Spacer(Modifier.height(16.dp))
-                Text(label, color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+                Text(label, color = Color(0xFF0F172A), fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
                 Spacer(Modifier.height(4.dp))
-                Text(sublabel, color = Color.White.copy(0.5f), fontSize = 12.sp)
+                Text(sublabel, color = Color(0xFF0F172A).copy(0.5f), fontSize = 12.sp)
                 Spacer(Modifier.height(12.dp))
                 Text("Tap to browse files", color = color, fontSize = 13.sp, fontWeight = FontWeight.Medium)
             }
@@ -268,45 +268,45 @@ fun MediaDropZone(
 @Composable
 fun TextInputZone(text: String, onTextChange: (String) -> Unit, color: Color) {
     Column {
-        Text("Paste Text to Analyze", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+        Text("Paste Text to Analyze", color = Color(0xFF0F172A), fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
         Spacer(Modifier.height(8.dp))
         OutlinedTextField(
             value = text,
             onValueChange = onTextChange,
             modifier = Modifier.fillMaxWidth().height(200.dp),
-            placeholder = { Text("Paste suspicious message, email content, or any text here...", color = Color.White.copy(0.35f), fontSize = 13.sp) },
+            placeholder = { Text("Paste suspicious message, email content, or any text here...", color = Color(0xFF0F172A).copy(0.35f), fontSize = 13.sp) },
             shape = RoundedCornerShape(16.dp),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = color,
                 unfocusedBorderColor = GlassBorder,
-                focusedTextColor = Color.White,
-                unfocusedTextColor = Color.White,
+                focusedTextColor = Color(0xFF0F172A),
+                unfocusedTextColor = Color(0xFF0F172A),
                 cursorColor = color,
                 focusedContainerColor = GlassWhite,
                 unfocusedContainerColor = GlassWhite
             )
         )
-        Text("${text.length} / 10,000 characters", color = Color.White.copy(0.4f), fontSize = 11.sp, modifier = Modifier.align(Alignment.End).padding(top = 4.dp))
+        Text("${text.length} / 10,000 characters", color = Color(0xFF0F172A).copy(0.4f), fontSize = 11.sp, modifier = Modifier.align(Alignment.End).padding(top = 4.dp))
     }
 }
 
 @Composable
 fun UrlInputZone(url: String, onUrlChange: (String) -> Unit, color: Color) {
     Column {
-        Text("Enter URL to Check", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+        Text("Enter URL to Check", color = Color(0xFF0F172A), fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
         Spacer(Modifier.height(8.dp))
         OutlinedTextField(
             value = url,
             onValueChange = onUrlChange,
             modifier = Modifier.fillMaxWidth(),
-            placeholder = { Text("https://suspicious-link.com/verify", color = Color.White.copy(0.35f), fontSize = 13.sp) },
+            placeholder = { Text("https://suspicious-link.com/verify", color = Color(0xFF0F172A).copy(0.35f), fontSize = 13.sp) },
             leadingIcon = { Icon(Icons.Default.Link, null, tint = color.copy(0.7f), modifier = Modifier.size(20.dp)) },
             shape = RoundedCornerShape(16.dp),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = color,
                 unfocusedBorderColor = GlassBorder,
-                focusedTextColor = Color.White,
-                unfocusedTextColor = Color.White,
+                focusedTextColor = Color(0xFF0F172A),
+                unfocusedTextColor = Color(0xFF0F172A),
                 cursorColor = color,
                 focusedContainerColor = GlassWhite,
                 unfocusedContainerColor = GlassWhite
@@ -326,7 +326,7 @@ fun ProfileInputSection(color: Color, onSubmit: (Map<String, Any>) -> Unit) {
     var posts by remember { mutableStateOf("") }
 
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Text("Profile Details", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+        Text("Profile Details", color = Color(0xFF0F172A), fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
 
         listOf(
             Triple("Username", username) { v: String -> username = v },
@@ -344,7 +344,7 @@ fun ProfileInputSection(color: Color, onSubmit: (Map<String, Any>) -> Unit) {
                 singleLine = true,
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = color, unfocusedBorderColor = GlassBorder,
-                    focusedLabelColor = color, focusedTextColor = Color.White, unfocusedTextColor = Color.White,
+                    focusedLabelColor = color, focusedTextColor = Color(0xFF0F172A), unfocusedTextColor = Color(0xFF0F172A),
                     focusedContainerColor = GlassWhite, unfocusedContainerColor = GlassWhite
                 )
             )
@@ -356,7 +356,7 @@ fun ProfileInputSection(color: Color, onSubmit: (Map<String, Any>) -> Unit) {
             shape = RoundedCornerShape(12.dp),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = color, unfocusedBorderColor = GlassBorder,
-                focusedTextColor = Color.White, unfocusedTextColor = Color.White,
+                focusedTextColor = Color(0xFF0F172A), unfocusedTextColor = Color(0xFF0F172A),
                 focusedContainerColor = GlassWhite, unfocusedContainerColor = GlassWhite
             )
         )

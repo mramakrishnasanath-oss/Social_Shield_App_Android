@@ -50,10 +50,6 @@ fun ProcessingScreen() {
     val outerRotation by infiniteTransition.animateFloat(
         360f, 0f, infiniteRepeatable(tween(3000, easing = LinearEasing)), "outerRot"
     )
-    val pulseScale by infiniteTransition.animateFloat(
-        0.92f, 1.08f, infiniteRepeatable(tween(1000), RepeatMode.Reverse), "pulse"
-    )
-
     LaunchedEffect(Unit) {
         ANALYSIS_STEPS.indices.forEach { i ->
             delay(600L)
@@ -135,7 +131,7 @@ fun ProcessingScreen() {
 
                 Text(
                     "AI",
-                    color = Color.White,
+                    color = Color(0xFF0F172A),
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Black
                 )
@@ -145,7 +141,7 @@ fun ProcessingScreen() {
 
             Text(
                 "Analyzing…",
-                color = Color.White,
+                color = Color(0xFF0F172A),
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -154,7 +150,7 @@ fun ProcessingScreen() {
 
             Text(
                 "Our AI is examining your content",
-                color = Color.White.copy(0.5f),
+                color = Color(0xFF0F172A).copy(0.5f),
                 fontSize = 14.sp
             )
 
@@ -210,9 +206,9 @@ fun ProcessingScreen() {
                             Text(
                                 step,
                                 color = when {
-                                    isDone -> Color.White.copy(0.5f)
-                                    isCurrent -> Color.White
-                                    else -> Color.White.copy(0.3f)
+                                    isDone -> Color(0xFF0F172A).copy(0.5f)
+                                    isCurrent -> Color(0xFF0F172A)
+                                    else -> Color(0xFF0F172A).copy(0.3f)
                                 },
                                 fontSize = 13.sp,
                                 fontWeight = if (isCurrent) FontWeight.SemiBold else FontWeight.Normal

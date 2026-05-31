@@ -85,19 +85,19 @@ fun AuthScreen(
                 ) {
                     Icon(Icons.Default.Shield, null, tint = NeonBlue, modifier = Modifier.size(24.dp))
                 }
-                Text("SocialShield", color = Color.White, fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                Text("SocialShield", color = Color(0xFF0F172A), fontSize = 24.sp, fontWeight = FontWeight.Bold)
             }
 
             Spacer(Modifier.height(48.dp))
 
             Text(
                 if (isSignUp) "Create Account" else "Welcome Back",
-                color = Color.White, fontSize = 28.sp, fontWeight = FontWeight.Bold
+                color = Color(0xFF0F172A), fontSize = 28.sp, fontWeight = FontWeight.Bold
             )
             Spacer(Modifier.height(8.dp))
             Text(
                 if (isSignUp) "Join the fight against digital fraud" else "Sign in to your secure dashboard",
-                color = Color.White.copy(0.55f), fontSize = 14.sp, textAlign = TextAlign.Center
+                color = Color(0xFF0F172A).copy(0.55f), fontSize = 14.sp, textAlign = TextAlign.Center
             )
 
             Spacer(Modifier.height(40.dp))
@@ -124,7 +124,7 @@ fun AuthScreen(
                     IconButton(onClick = { passwordVisible = !passwordVisible }) {
                         Icon(
                             if (passwordVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                            null, tint = Color.White.copy(0.5f), modifier = Modifier.size(20.dp)
+                            null, tint = Color(0xFF0F172A).copy(0.5f), modifier = Modifier.size(20.dp)
                         )
                     }
                 },
@@ -161,7 +161,7 @@ fun AuthScreen(
             // Divider
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 HorizontalDivider(modifier = Modifier.weight(1f), color = GlassBorder)
-                Text("or", color = Color.White.copy(0.4f), fontSize = 13.sp)
+                Text("or", color = Color(0xFF0F172A).copy(0.4f), fontSize = 13.sp)
                 HorizontalDivider(modifier = Modifier.weight(1f), color = GlassBorder)
             }
 
@@ -173,7 +173,7 @@ fun AuthScreen(
                 modifier = Modifier.fillMaxWidth().height(52.dp),
                 shape = RoundedCornerShape(26.dp),
                 border = BorderStroke(1.dp, GlassBorder),
-                colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White)
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFF0F172A))
             ) {
                 Icon(Icons.Default.AccountCircle, null, modifier = Modifier.size(20.dp))
                 Spacer(Modifier.width(10.dp))
@@ -218,10 +218,10 @@ fun ShieldTextField(
             focusedBorderColor = NeonBlue,
             unfocusedBorderColor = GlassBorder,
             focusedLabelColor = NeonBlue,
-            unfocusedLabelColor = Color.White.copy(0.5f),
+            unfocusedLabelColor = Color(0xFF0F172A).copy(0.5f),
             cursorColor = NeonBlue,
-            focusedTextColor = Color.White,
-            unfocusedTextColor = Color.White,
+            focusedTextColor = Color(0xFF0F172A),
+            unfocusedTextColor = Color(0xFF0F172A),
             focusedContainerColor = GlassWhite,
             unfocusedContainerColor = GlassWhite
         ),

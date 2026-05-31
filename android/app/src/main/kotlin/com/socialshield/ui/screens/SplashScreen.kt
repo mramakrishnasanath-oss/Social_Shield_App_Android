@@ -25,7 +25,6 @@ import com.socialshield.ui.theme.*
 fun SplashScreen(onNavigateNext: () -> Unit) {
     var logoVisible by remember { mutableStateOf(false) }
     var taglineVisible by remember { mutableStateOf(false) }
-    var scanLinePos by remember { mutableStateOf(0f) }
 
     val logoScale by animateFloatAsState(
         if (logoVisible) 1f else 0.3f,
@@ -152,7 +151,7 @@ fun SplashScreen(onNavigateNext: () -> Unit) {
                 // SS text in center
                 Text(
                     "SS",
-                    color = Color.White,
+                    color = Color(0xFF0F172A),
                     fontSize = 32.sp,
                     fontWeight = FontWeight.Black,
                     letterSpacing = (-2).sp
@@ -163,7 +162,7 @@ fun SplashScreen(onNavigateNext: () -> Unit) {
 
             Text(
                 "SocialShield",
-                color = Color.White,
+                color = Color(0xFF0F172A),
                 fontSize = 34.sp,
                 fontWeight = FontWeight.Black,
                 letterSpacing = (-1).sp,
