@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -54,7 +55,7 @@ fun ResultScreen(
             ) {
                 Icon(Icons.Default.ErrorOutline, null, tint = RiskHigh, modifier = Modifier.size(48.dp))
                 Spacer(Modifier.height(16.dp))
-                Text(error!!, color = Color(0xFF0F172A), fontSize = 16.sp)
+                Text(error!!, color = ContentColor, fontSize = 16.sp)
                 Spacer(Modifier.height(24.dp))
                 NeonButton(text = "Go Back", onClick = onBack)
             }
@@ -86,9 +87,9 @@ fun ResultScreen(
                         onClick = onBack,
                         modifier = Modifier.size(40.dp).clip(CircleShape).background(GlassWhite)
                     ) {
-                        Icon(Icons.Default.ArrowBack, null, tint = Color(0xFF0F172A), modifier = Modifier.size(20.dp))
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = ContentColor, modifier = Modifier.size(20.dp))
                     }
-                    Text("Scan Result", color = Color(0xFF0F172A), fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                    Text("Scan Result", color = ContentColor, fontSize = 20.sp, fontWeight = FontWeight.Bold)
                 }
 
                 // Big verdict section
@@ -147,12 +148,12 @@ fun ResultScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Column {
-                                Text("Risk Level", color = Color(0xFF0F172A).copy(0.6f), fontSize = 12.sp)
+                                Text("Risk Level", color = ContentColor.copy(0.6f), fontSize = 12.sp)
                                 Spacer(Modifier.height(8.dp))
                                 RiskIndicator(r.riskLevel)
                             }
                             Column(horizontalAlignment = Alignment.End) {
-                                Text("Fake Probability", color = Color(0xFF0F172A).copy(0.6f), fontSize = 12.sp)
+                                Text("Fake Probability", color = ContentColor.copy(0.6f), fontSize = 12.sp)
                                 Text(
                                     "${r.fakeProbability.toInt()}%",
                                     color = verdictColor,
@@ -165,7 +166,7 @@ fun ResultScreen(
 
                     // Probability bars
                     GlassCard {
-                        Text("Probability Analysis", color = Color(0xFF0F172A), fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
+                        Text("Probability Analysis", color = ContentColor, fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
                         Spacer(Modifier.height(16.dp))
                         ProbabilityBar(label = "Fake", value = r.fakeProbability, color = RiskHigh)
                         Spacer(Modifier.height(8.dp))
@@ -181,8 +182,8 @@ fun ResultScreen(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Column {
-                                    Text("Manipulation Heatmap", color = Color(0xFF0F172A), fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
-                                    Text("Red areas indicate manipulation", color = Color(0xFF0F172A).copy(0.5f), fontSize = 12.sp)
+                                    Text("Manipulation Heatmap", color = ContentColor, fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
+                                    Text("Red areas indicate manipulation", color = ContentColor.copy(0.5f), fontSize = 12.sp)
                                 }
                                 TextButton(onClick = { showHeatmap = !showHeatmap }) {
                                     Text(if (showHeatmap) "Hide" else "Show", color = NeonBlue, fontSize = 13.sp)
@@ -215,7 +216,7 @@ fun ResultScreen(
                             horizontalArrangement = Arrangement.spacedBy(10.dp)
                         ) {
                             Icon(Icons.Default.Psychology, null, tint = NeonBlue, modifier = Modifier.size(20.dp))
-                            Text("AI Explanation", color = Color(0xFF0F172A), fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
+                            Text("AI Explanation", color = ContentColor, fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
                         }
                         Spacer(Modifier.height(14.dp))
                         r.explanations.forEach { explanation ->
@@ -230,7 +231,53 @@ fun ResultScreen(
                                 )
                                 Text(
                                     explanation,
-                                    color = Color(0xFF0F172A).copy(0.85f),
+                                    color = ContentColor.copy(0.85f),
+                                    fontSize = 14.sp,
+                                    lineHeight = 20.sp
+                                )
+                            }
+                        }
+                    }
+
+                    // Safety Recommendations
+                    val recommendationsList = if (r.recommendations.isNotEmpty()) r.recommendations else {
+                        when (r.verdict) {
+                            "FAKE" -> listOf(
+                                "Block and report this profile to the platform administration.",
+                                "Do not engage or click on any links in the bio or messages.",
+                                "Warn your contacts about possible scam impersonation from this account."
+                            )
+                            "SUSPICIOUS" -> listOf(
+                                "Exercise caution when communicating or sharing information.",
+                                "Do not click on external links in their bio or posts.",
+                                "Verify their identity through a secondary, trusted channel."
+                            )
+                            else -> listOf(
+                                "This profile appears safe, but continue to practice general safety.",
+                                "Avoid sharing personal details or financial info unless verified.",
+                                "Ensure your own social security and two-factor authentication are enabled."
+                            )
+                        }
+                    }
+                    GlassCard {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
+                            Icon(Icons.Default.Security, null, tint = RiskLow, modifier = Modifier.size(20.dp))
+                            Text("Safety Recommendations", color = ContentColor, fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
+                        }
+                        Spacer(Modifier.height(14.dp))
+                        recommendationsList.forEach { rec ->
+                            Row(
+                                modifier = Modifier.padding(vertical = 4.dp),
+                                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                                verticalAlignment = Alignment.Top
+                            ) {
+                                Icon(Icons.Default.CheckCircle, null, tint = RiskLow, modifier = Modifier.size(16.dp).offset(y = 2.dp))
+                                Text(
+                                    rec,
+                                    color = ContentColor.copy(0.85f),
                                     fontSize = 14.sp,
                                     lineHeight = 20.sp
                                 )
@@ -241,7 +288,7 @@ fun ResultScreen(
                     // Metadata
                     r.metadata?.let { meta ->
                         GlassCard {
-                            Text("Technical Details", color = Color(0xFF0F172A).copy(0.7f), fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
+                            Text("Technical Details", color = ContentColor.copy(0.7f), fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
                             Spacer(Modifier.height(10.dp))
                             meta.entries.take(5).forEach { (key, value) ->
                                 if (value !is Map<*, *> && value !is List<*>) {
@@ -249,8 +296,8 @@ fun ResultScreen(
                                         modifier = Modifier.fillMaxWidth().padding(vertical = 2.dp),
                                         horizontalArrangement = Arrangement.SpaceBetween
                                     ) {
-                                        Text(key.replace("_", " ").replaceFirstChar { it.uppercase() }, color = Color(0xFF0F172A).copy(0.5f), fontSize = 12.sp)
-                                        Text("$value", color = Color(0xFF0F172A).copy(0.8f), fontSize = 12.sp)
+                                        Text(key.replace("_", " ").replaceFirstChar { it.uppercase() }, color = ContentColor.copy(0.5f), fontSize = 12.sp)
+                                        Text("$value", color = ContentColor.copy(0.8f), fontSize = 12.sp)
                                     }
                                 }
                             }
@@ -260,7 +307,7 @@ fun ResultScreen(
                     // Scan ID
                     Text(
                         "Scan ID: ${scanId.take(8)}…",
-                        color = Color(0xFF0F172A).copy(0.3f),
+                        color = ContentColor.copy(0.3f),
                         fontSize = 11.sp,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth()
@@ -273,7 +320,7 @@ fun ResultScreen(
                             modifier = Modifier.weight(1f).height(48.dp),
                             shape = RoundedCornerShape(24.dp),
                             border = BorderStroke(1.dp, GlassBorder),
-                            colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFF0F172A))
+                            colors = ButtonDefaults.outlinedButtonColors(contentColor = ContentColor)
                         ) {
                             Text("← Back")
                         }
@@ -297,7 +344,7 @@ fun ProbabilityBar(label: String, value: Float, color: Color) {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(label, color = Color(0xFF0F172A).copy(0.7f), fontSize = 13.sp)
+            Text(label, color = ContentColor.copy(0.7f), fontSize = 13.sp)
             Text("${value.toInt()}%", color = color, fontSize = 13.sp, fontWeight = FontWeight.Bold)
         }
         Spacer(Modifier.height(6.dp))

@@ -9,6 +9,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.socialshield.data.repository.ApiResult
 import com.socialshield.data.repository.ScanRepository
+import com.socialshield.data.repository.PreferencesManager
 import com.socialshield.domain.models.ScanHistoryItem
 import com.socialshield.domain.models.ScanResult
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -56,9 +57,12 @@ class AuthViewModel @Inject constructor(private val auth: FirebaseAuth) : ViewMo
             .addOnFailureListener { e -> _uiState.update { it.copy(isLoading = false, error = e.message) } }
     }
 
-    fun signInWithGoogle() {
-        // Google sign-in flow handled in Activity - here we just update state after credential
-        _uiState.update { it.copy(error = "Use the Google Sign-In activity flow") }
+    fun signInWithGoogle(idToken: String) {
+        _uiState.update { it.copy(isLoading = true, error = null) }
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        auth.signInWithCredential(credential)
+            .addOnSuccessListener { _uiState.update { it.copy(isLoading = false, isLoggedIn = true) } }
+            .addOnFailureListener { e -> _uiState.update { it.copy(isLoading = false, error = e.message) } }
     }
 
     fun signOut() {
@@ -88,24 +92,28 @@ class HomeViewModel @Inject constructor(
     init {
         val user = auth.currentUser
         _uiState.update { it.copy(userName = user?.displayName ?: user?.email?.substringBefore('@') ?: "") }
-        loadData()
-    }
-
-    private fun loadData() = viewModelScope.launch {
-        when (val statsResult = repo.getUserStats()) {
-            is ApiResult.Success -> _uiState.update {
-                it.copy(
-                    trustScore = statsResult.data.trustScore,
-                    totalScans = statsResult.data.totalScans,
-                    fakeDetected = statsResult.data.fakeDetected,
-                    suspiciousDetected = statsResult.data.suspiciousDetected
-                )
+        
+        // Listen to user stats in real-time
+        viewModelScope.launch {
+            repo.getUserStatsFlow().collect { stats ->
+                if (stats != null) {
+                    _uiState.update {
+                        it.copy(
+                            trustScore = stats.trustScore,
+                            totalScans = stats.totalScans,
+                            fakeDetected = stats.fakeDetected,
+                            suspiciousDetected = stats.suspiciousDetected
+                        )
+                    }
+                }
             }
-            else -> {}
         }
-        when (val historyResult = repo.getHistory()) {
-            is ApiResult.Success -> _uiState.update { it.copy(recentScans = historyResult.data) }
-            else -> {}
+
+        // Listen to recent history in real-time
+        viewModelScope.launch {
+            repo.getHistoryFlow().collect { history ->
+                _uiState.update { it.copy(recentScans = history) }
+            }
         }
     }
 }
@@ -171,16 +179,85 @@ class HistoryViewModel @Inject constructor(private val repo: ScanRepository) : V
     private val _uiState = MutableStateFlow(HistoryUiState())
     val uiState: StateFlow<HistoryUiState> = _uiState.asStateFlow()
 
-    fun loadHistory(mediaType: String? = null) = viewModelScope.launch {
+    private val mediaTypeFilter = MutableStateFlow<String?>(null)
+    private val searchQuery = MutableStateFlow("")
+
+    init {
         _uiState.update { it.copy(isLoading = true) }
-        when (val result = repo.getHistory(mediaType)) {
-            is ApiResult.Success -> _uiState.update { it.copy(isLoading = false, scans = result.data) }
-            is ApiResult.Error -> _uiState.update { it.copy(isLoading = false, error = result.message) }
+        viewModelScope.launch {
+            combine(mediaTypeFilter, searchQuery, repo.getHistoryFlow(null)) { filter, query, history ->
+                var filtered = if (filter != null) {
+                    history.filter { it.mediaType == filter }
+                } else {
+                    history
+                }
+                if (query.isNotBlank()) {
+                    filtered = filtered.filter { item ->
+                        item.mediaType.contains(query, ignoreCase = true) ||
+                        item.verdict.contains(query, ignoreCase = true) ||
+                        item.scanId.contains(query, ignoreCase = true)
+                    }
+                }
+                filtered
+            }.collect { list ->
+                _uiState.update { it.copy(isLoading = false, scans = list) }
+            }
         }
+    }
+
+    fun loadHistory(mediaType: String?) {
+        mediaTypeFilter.value = mediaType
+    }
+
+    fun setSearchQuery(query: String) {
+        searchQuery.value = query
     }
 
     fun deleteScan(scanId: String) = viewModelScope.launch {
         repo.deleteScan(scanId)
-        _uiState.update { it.copy(scans = it.scans.filter { s -> s.scanId != scanId }) }
+    }
+}
+
+// ─── Settings ViewModel ────────────────────────────────────────────────────────
+@HiltViewModel
+class SettingsViewModel @Inject constructor(
+    private val preferencesManager: PreferencesManager,
+    private val auth: FirebaseAuth
+) : ViewModel() {
+    val darkMode = preferencesManager.darkModeFlow.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = true
+    )
+    val localProcessing = preferencesManager.localProcessingFlow.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = false
+    )
+    val autoSaveScans = preferencesManager.autoSaveScansFlow.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = true
+    )
+    val threatAlerts = preferencesManager.threatAlertsFlow.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = true
+    )
+
+    fun setDarkMode(enabled: Boolean) = viewModelScope.launch {
+        preferencesManager.setDarkMode(enabled)
+    }
+
+    fun setLocalProcessing(enabled: Boolean) = viewModelScope.launch {
+        preferencesManager.setLocalProcessing(enabled)
+    }
+
+    fun setAutoSaveScans(enabled: Boolean) = viewModelScope.launch {
+        preferencesManager.setAutoSaveScans(enabled)
+    }
+
+    fun setThreatAlerts(enabled: Boolean) = viewModelScope.launch {
+        preferencesManager.setThreatAlerts(enabled)
     }
 }

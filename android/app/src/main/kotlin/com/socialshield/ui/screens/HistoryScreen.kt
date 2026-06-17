@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -50,10 +51,36 @@ fun HistoryScreen(
                 onClick = onBack,
                 modifier = Modifier.size(40.dp).clip(CircleShape).background(GlassWhite)
             ) {
-                Icon(Icons.Default.ArrowBack, null, tint = Color(0xFF0F172A), modifier = Modifier.size(20.dp))
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = ContentColor, modifier = Modifier.size(20.dp))
             }
-            Text("Scan History", color = Color(0xFF0F172A), fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            Text("Scan History", color = ContentColor, fontSize = 20.sp, fontWeight = FontWeight.Bold)
         }
+
+        // Search bar
+        var searchQuery by remember { mutableStateOf("") }
+        OutlinedTextField(
+            value = searchQuery,
+            onValueChange = { 
+                searchQuery = it
+                viewModel.setSearchQuery(it)
+            },
+            placeholder = { Text("Search history...", color = ContentColor.copy(0.4f), fontSize = 13.sp) },
+            leadingIcon = { Icon(Icons.Default.Search, null, tint = ContentColor.copy(0.5f), modifier = Modifier.size(20.dp)) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            shape = RoundedCornerShape(12.dp),
+            singleLine = true,
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = GlassBorder,
+                focusedTextColor = ContentColor,
+                unfocusedTextColor = ContentColor,
+                cursorColor = MaterialTheme.colorScheme.primary,
+                focusedContainerColor = GlassWhite,
+                unfocusedContainerColor = GlassWhite
+            )
+        )
 
         // Filter chips
         LazyRow(
@@ -71,7 +98,7 @@ fun HistoryScreen(
                         .clickable { selectedFilter = filter }
                         .padding(horizontal = 16.dp, vertical = 8.dp)
                 ) {
-                    Text(filter, color = if (selected) NeonBlue else Color(0xFF0F172A).copy(0.7f), fontSize = 13.sp, fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal)
+                    Text(filter, color = if (selected) NeonBlue else ContentColor.copy(0.7f), fontSize = 13.sp, fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal)
                 }
             }
         }
@@ -86,10 +113,10 @@ fun HistoryScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Icon(Icons.Default.SearchOff, null, tint = Color(0xFF0F172A).copy(0.3f), modifier = Modifier.size(64.dp))
+                    Icon(Icons.Default.SearchOff, null, tint = ContentColor.copy(0.3f), modifier = Modifier.size(64.dp))
                     Spacer(Modifier.height(16.dp))
-                    Text("No scans found", color = Color(0xFF0F172A).copy(0.4f), fontSize = 16.sp)
-                    Text("Start scanning to see results here", color = Color(0xFF0F172A).copy(0.3f), fontSize = 13.sp)
+                    Text("No scans found", color = ContentColor.copy(0.4f), fontSize = 16.sp)
+                    Text("Start scanning to see results here", color = ContentColor.copy(0.3f), fontSize = 13.sp)
                 }
             }
         } else {
@@ -147,10 +174,10 @@ fun HistoryItem(
         }
 
         Column(modifier = Modifier.weight(1f)) {
-            Text(scan.mediaType, color = Color(0xFF0F172A), fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+            Text(scan.mediaType, color = ContentColor, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
             Text(
                 scan.timestamp.take(16).replace("T", " "),
-                color = Color(0xFF0F172A).copy(0.45f), fontSize = 11.sp
+                color = ContentColor.copy(0.45f), fontSize = 11.sp
             )
         }
 
@@ -160,7 +187,7 @@ fun HistoryItem(
             onClick = onDelete,
             modifier = Modifier.size(32.dp)
         ) {
-            Icon(Icons.Default.DeleteOutline, null, tint = Color(0xFF0F172A).copy(0.3f), modifier = Modifier.size(18.dp))
+            Icon(Icons.Default.DeleteOutline, null, tint = ContentColor.copy(0.3f), modifier = Modifier.size(18.dp))
         }
     }
 }

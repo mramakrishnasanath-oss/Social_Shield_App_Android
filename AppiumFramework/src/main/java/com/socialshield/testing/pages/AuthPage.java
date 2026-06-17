@@ -1,0 +1,93 @@
+package com.socialshield.testing.pages;
+
+import io.appium.java_client.AppiumBy;
+import io.appium.java_client.android.AndroidDriver;
+import org.openqa.selenium.By;
+
+public class AuthPage extends BasePage {
+
+    // Onboarding Locators
+    private final By skipButton = AppiumBy.androidUIAutomator("new UiSelector().text(\"Skip\")");
+    private final By nextButton = AppiumBy.androidUIAutomator("new UiSelector().textContains(\"Next\")");
+    private final By getStartedButton = AppiumBy.androidUIAutomator("new UiSelector().text(\"Get Started\")");
+
+    // Auth Screen Locators
+    private final By emailField = AppiumBy.androidUIAutomator("new UiSelector().text(\"Email\")");
+    private final By passwordField = AppiumBy.androidUIAutomator("new UiSelector().text(\"Password\")");
+    private final By signInButton = AppiumBy.androidUIAutomator("new UiSelector().text(\"Sign In\")");
+    private final By createAccountButton = AppiumBy.androidUIAutomator("new UiSelector().text(\"Create Account\")");
+    private final By googleSignInButton = AppiumBy.androidUIAutomator("new UiSelector().textContains(\"Google\")");
+    private final By toggleAuthModeLink = AppiumBy.androidUIAutomator("new UiSelector().textContains(\"account?\")");
+    private final By errorMessageText = AppiumBy.androidUIAutomator("new UiSelector().textContains(\"failed\")"); // Or general error display text
+
+    public AuthPage(AndroidDriver driver) {
+        super(driver);
+    }
+
+    public void skipOnboarding() {
+        logger.info("Attempting to skip onboarding...");
+        if (isElementDisplayedQuickly(skipButton)) {
+            click(skipButton);
+            logger.info("Skipped onboarding via Skip button.");
+        } else if (isElementDisplayedQuickly(getStartedButton)) {
+            click(getStartedButton);
+            logger.info("Onboarding already at last page, clicked Get Started.");
+        } else {
+            logger.info("Onboarding skip button not found, assuming already on auth screen.");
+        }
+    }
+
+    public void completeOnboarding() {
+        logger.info("Completing onboarding step by step...");
+        for (int i = 0; i < 4; i++) {
+            if (isElementDisplayedQuickly(nextButton)) {
+                click(nextButton);
+            } else if (isElementDisplayedQuickly(getStartedButton)) {
+                click(getStartedButton);
+                break;
+            }
+        }
+    }
+
+    public void login(String email, String password) {
+        logger.info("Performing login with email: " + email);
+        sendKeys(emailField, email);
+        sendKeys(passwordField, password);
+        click(signInButton);
+    }
+
+    public void signUp(String email, String password) {
+        logger.info("Performing signup with email: " + email);
+        if (isElementDisplayed(toggleAuthModeLink)) {
+            String linkText = getText(toggleAuthModeLink);
+            if (linkText.contains("Sign Up")) {
+                click(toggleAuthModeLink);
+            }
+        }
+        sendKeys(emailField, email);
+        sendKeys(passwordField, password);
+        click(createAccountButton);
+    }
+
+    public void clickGoogleSignIn() {
+        logger.info("Clicking Google sign in...");
+        click(googleSignInButton);
+    }
+
+    public void toggleAuthMode() {
+        logger.info("Toggling authentication mode...");
+        click(toggleAuthModeLink);
+    }
+
+    public boolean isErrorMessageDisplayed() {
+        return isElementDisplayed(errorMessageText);
+    }
+
+    public String getErrorMessage() {
+        return getText(errorMessageText);
+    }
+
+    public boolean isAuthScreenDisplayed() {
+        return isElementDisplayed(emailField) || isElementDisplayed(signInButton) || isElementDisplayed(googleSignInButton);
+    }
+}

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="SocialShield E2E Suite">
+    <!-- Test execution listener for reporting -->
+    <listeners>
+        <listener class-name="com.socialshield.testing.tests.TestListener"/>
+    </listeners>
+
+    <test name="SocialShield Appium Tests">
+        <classes>
+            <class name="com.socialshield.testing.tests.AuthTests"/>
+            <class name="com.socialshield.testing.tests.DashboardTests"/>
+            <class name="com.socialshield.testing.tests.ProfileScanTests"/>
+            <class name="com.socialshield.testing.tests.HistoryTests"/>
+            <class name="com.socialshield.testing.tests.ReportsTests"/>
+            <class name="com.socialshield.testing.tests.SettingsTests"/>
+            <class name="com.socialshield.testing.tests.UiUxTests"/>
+            <class name="com.socialshield.testing.tests.FunctionalTests"/>
+            <class name="com.socialshield.testing.tests.ValidationTests"/>
+        </classes>
+    </test>
+</suite>

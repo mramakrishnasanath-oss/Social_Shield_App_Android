@@ -4,7 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.*
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.*
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -21,8 +22,18 @@ import com.google.firebase.auth.FirebaseAuth
 import com.socialshield.domain.models.ScanType
 import com.socialshield.ui.screens.*
 import com.socialshield.ui.theme.*
+import com.socialshield.data.repository.PreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import androidx.compose.ui.draw.scale
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.ui.Alignment
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.ui.draw.clip
+import androidx.compose.foundation.shape.RoundedCornerShape
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -30,10 +41,20 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var auth: FirebaseAuth
 
+    @Inject
+    lateinit var preferencesManager: PreferencesManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            SocialShieldTheme {
+            val isDarkTheme by preferencesManager.darkModeFlow.collectAsState(initial = true)
+            
+            // Sync with ThemeState so that settings switch is in sync
+            LaunchedEffect(isDarkTheme) {
+                ThemeState.setDarkMode(isDarkTheme)
+            }
+            
+            SocialShieldTheme(darkTheme = isDarkTheme) {
                 SocialShieldApp(isLoggedIn = auth.currentUser != null)
             }
         }
@@ -127,7 +148,8 @@ fun SocialShieldApp(isLoggedIn: Boolean) {
                 HomeScreen(
                     onScanClick = { type -> navController.navigate(Routes.scan(type)) },
                     onHistoryClick = { navController.navigate(Routes.HISTORY) },
-                    onFraudMapClick = { navController.navigate(Routes.FRAUD_MAP) }
+                    onFraudMapClick = { navController.navigate(Routes.FRAUD_MAP) },
+                    onScanDetailClick = { scanId -> navController.navigate(Routes.result(scanId)) }
                 )
             }
 
@@ -198,25 +220,90 @@ fun ShieldBottomBar(currentRoute: String?, onNavigate: (String) -> Unit) {
         Triple(Routes.SETTINGS, Icons.Default.Settings, "Settings")
     )
 
-    NavigationBar(
-        containerColor = DarkSurface,
-        tonalElevation = 0.dp
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp, vertical = 8.dp)
     ) {
-        items.forEach { (route, icon, label) ->
-            val selected = currentRoute == route
-            NavigationBarItem(
-                icon = { Icon(icon, contentDescription = label, modifier = Modifier.padding(0.dp)) },
-                label = { Text(label, fontSize = 11.sp) },
-                selected = selected,
-                onClick = { onNavigate(route) },
-                colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = NeonBlue,
-                    selectedTextColor = NeonBlue,
-                    unselectedIconColor = Color.White.copy(0.4f),
-                    unselectedTextColor = Color.White.copy(0.4f),
-                    indicatorColor = NeonBlue.copy(0.15f)
-                )
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(64.dp),
+            shape = RoundedCornerShape(32.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.85f)
+            ),
+            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+            border = BorderStroke(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.15f)
             )
+        ) {
+            Row(
+                modifier = Modifier.fillMaxSize(),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                items.forEach { (route, icon, label) ->
+                    val selected = currentRoute == route
+                    val animatedScale by animateFloatAsState(
+                        targetValue = if (selected) 1.15f else 1.0f,
+                        animationSpec = spring(dampingRatio = 0.6f, stiffness = 300f),
+                        label = "scale"
+                    )
+                    val tintColor = if (selected) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                    }
+
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                            .clickable(
+                                interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() },
+                                indication = null,
+                                onClick = { onNavigate(route) }
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .scale(animatedScale)
+                                    .size(32.dp)
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .background(
+                                        if (selected) {
+                                            MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)
+                                        } else {
+                                            Color.Transparent
+                                        }
+                                    ),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    icon,
+                                    contentDescription = label,
+                                    tint = tintColor,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+                            Spacer(Modifier.height(2.dp))
+                            Text(
+                                label,
+                                fontSize = 10.sp,
+                                fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
+                                color = tintColor
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 }

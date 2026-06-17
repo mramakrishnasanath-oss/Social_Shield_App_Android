@@ -27,48 +27,110 @@ class ProfileScanRequest(BaseModel):
     account_age_days: Optional[int] = None
     profile_pic_url: Optional[str] = None
     platform: Optional[str] = "unknown"
+    likes_per_post: Optional[int] = None
+    comments_per_post: Optional[int] = None
 
 
-def analyze_profile_signals(data: ProfileScanRequest) -> tuple[float, list[str]]:
+def analyze_profile_signals(data: ProfileScanRequest) -> tuple[float, list[str], list[str]]:
     score = 0.0
     reasons = []
+    recommendations = []
 
     # Follower/following ratio (bots follow many, have few followers)
     if data.followers is not None and data.following is not None:
-        if data.following > 0 and data.followers / data.following < 0.1:
-            score += 0.3
-            reasons.append("Extremely low follower/following ratio — bot-like behavior")
-        if data.following > 5000 and data.followers < 100:
-            score += 0.25
-            reasons.append("Mass following with minimal followers")
+        if data.following > 0:
+            ratio = data.followers / data.following
+            if ratio < 0.05:
+                score += 0.25
+                reasons.append("Extremely low follower/following ratio (less than 5%) — classic bot-like behavior")
+            elif ratio < 0.15:
+                score += 0.15
+                reasons.append("Low follower/following ratio (less than 15%) — suspicious follower balance")
+        if data.following > 3000 and data.followers < 100:
+            score += 0.20
+            reasons.append("Mass-following behavior with minimal audience")
 
-    # New account with many posts
+    # New account with high posting frequency
     if data.account_age_days is not None and data.post_count is not None:
-        if data.account_age_days < 30 and data.post_count > 200:
-            score += 0.3
-            reasons.append("Unusually high post frequency for new account")
+        if data.account_age_days < 30:
+            if data.post_count > 150:
+                score += 0.25
+                reasons.append("Unusually high post frequency for a new account (possible automated botting)")
+            else:
+                score += 0.10
+                reasons.append("Recent account creation (less than 30 days old)")
+        elif data.account_age_days > 365 and data.post_count == 0:
+            score += 0.10
+            reasons.append("Dormant account pattern: over a year old with 0 posts")
 
-    # Generic username patterns
+    # Generic or suspicious username patterns
     if data.username:
-        if re.match(r'^[a-z]+\d{4,}$', data.username):
-            score += 0.2
-            reasons.append("Username matches bot-generation pattern (letters + numbers)")
+        # Letters followed by 4 or more digits
+        if re.match(r'^[a-zA-Z]+\d{4,}$', data.username):
+            score += 0.20
+            reasons.append("Username matches automated generation pattern (alphabet letters + multiple digits)")
+        # String length and special characters
         if len(data.username) > 20:
-            score += 0.1
-            reasons.append("Unusually long username")
+            score += 0.05
+            reasons.append("Unusually long username (length > 20 characters)")
 
-    # Empty or generic bio
-    if data.bio is not None:
-        if len(data.bio) < 5:
-            score += 0.15
-            reasons.append("Empty or minimal bio")
-        spam_words = ['crypto', 'investment', 'dm for', 'follow back', 'forex']
-        matched = [w for w in spam_words if w in data.bio.lower()]
+    # Bio quality & spam keywords
+    if data.bio:
+        bio_lower = data.bio.lower()
+        if len(data.bio) < 8:
+            score += 0.10
+            reasons.append("Minimal or empty bio description")
+        
+        spam_words = ['crypto', 'whatsapp', 'forex', 'earn money', 'cash', 'investment', 'rich', 'sugar daddy', 'meet me', 'onlyfans', 'giftcard', 'free money', 'telegram', 'inbox me']
+        matched = [w for w in spam_words if w in bio_lower]
         if matched:
-            score += 0.2 * len(matched)
-            reasons.append(f"Spam keywords in bio: {', '.join(matched)}")
+            spam_score = min(0.10 * len(matched), 0.25)
+            score += spam_score
+            reasons.append(f"Financial scam/spam keywords detected in bio: {', '.join(matched)}")
+    else:
+        score += 0.10
+        reasons.append("Missing profile bio description")
 
-    return min(score, 1.0), reasons
+    # Missing profile picture
+    if not data.profile_pic_url:
+        score += 0.15
+        reasons.append("No profile picture uploaded — common placeholder pattern for bot networks")
+
+    # Engagement analysis
+    if data.followers is not None and data.followers > 500:
+        likes = data.likes_per_post or 0
+        comments = data.comments_per_post or 0
+        total_interactions = likes + comments
+        engagement_rate = total_interactions / data.followers
+        if engagement_rate < 0.002: # 0.2%
+            score += 0.20
+            reasons.append("Extremely low post engagement rate relative to follower count (possible fake followers)")
+        elif engagement_rate < 0.01: # 1.0%
+            score += 0.10
+            reasons.append("Low profile engagement rate")
+
+    final_score = min(score, 1.0)
+    
+    # Recommendations based on severity
+    if final_score >= 0.7:
+        recommendations = [
+            "Block and report this profile to the social platform immediately.",
+            "Do not accept any direct messages, file sharing, or connection requests.",
+            "Do not share any passwords, email links, or OTP verification codes."
+        ]
+    elif final_score >= 0.3:
+        recommendations = [
+            "Exercise caution when responding to private messages from this account.",
+            "Avoid clicking on any short URLs or links listed in their bio.",
+            "Verify their claims through external, reputable channels before engaging."
+        ]
+    else:
+        recommendations = [
+            "This profile appears legitimate. No immediate security action needed.",
+            "Keep practicing standard cyber hygiene when sharing information online."
+        ]
+
+    return final_score, reasons, recommendations
 
 
 @router.post("/profile")
@@ -77,9 +139,9 @@ async def scan_profile(
     user_id: str = Depends(get_current_user)
 ):
     """Analyze social media profile for fake/bot indicators"""
-    fake_score, reasons = analyze_profile_signals(request)
+    fake_score, reasons, recommendations = analyze_profile_signals(request)
 
-    if fake_score >= 0.6:
+    if fake_score >= 0.7:
         verdict = VerdictLevel.FAKE
         risk = "HIGH"
     elif fake_score >= 0.3:
@@ -103,6 +165,7 @@ async def scan_profile(
         real_probability=round((1 - fake_score) * 100, 2),
         risk_level=risk,
         explanations=reasons,
+        recommendations=recommendations,
         metadata={"platform": request.platform, "username": request.username},
         timestamp=datetime.utcnow().isoformat()
     )

@@ -1,0 +1,34 @@
+# Android build files
+*.iml
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+/capture
+/android/build
+/android/app/build
+/android/.gradle
+/android/local.properties
+
+# Appium framework outputs
+/AppiumFramework/target/
+/AppiumFramework/logs/
+/AppiumFramework/reports/failedScreenshots/
+~$*
+# Keep reports folder templates but ignore actual dynamic outputs if desired (we can check-in templates if wanted)
+
+# Python virtual environment and cache
+/backend/venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# IDE files
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

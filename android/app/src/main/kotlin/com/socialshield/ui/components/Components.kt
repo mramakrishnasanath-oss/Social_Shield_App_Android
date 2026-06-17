@@ -51,13 +51,16 @@ fun NeonButton(
     enabled: Boolean = true,
     isLoading: Boolean = false
 ) {
-    val infiniteTransition = rememberInfiniteTransition(label = "glow")
     Box(
         modifier = modifier
             .height(52.dp)
             .clip(RoundedCornerShape(26.dp))
             .background(
-                Brush.horizontalGradient(listOf(color, NeonPurple))
+                if (enabled && !isLoading) {
+                    Brush.horizontalGradient(listOf(color, NeonPurple))
+                } else {
+                    Brush.horizontalGradient(listOf(Color.Gray.copy(0.4f), Color.Gray.copy(0.2f)))
+                }
             )
             .then(
                 if (enabled && !isLoading) Modifier.clickable { onClick() }
@@ -74,7 +77,7 @@ fun NeonButton(
         } else {
             Text(
                 text = text,
-                color = Color.White,
+                color = if (enabled && !isLoading) Color.White else Color.White.copy(0.5f),
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp
             )
@@ -125,8 +128,8 @@ fun ScanTypeCard(
                 Icon(icon, contentDescription = null, tint = color, modifier = Modifier.size(24.dp))
             }
             Spacer(Modifier.height(12.dp))
-            Text(title, color = Color(0xFF0F172A), fontWeight = FontWeight.Bold, fontSize = 16.sp)
-            Text(subtitle, color = Color(0xFF0F172A).copy(0.6f), fontSize = 12.sp)
+            Text(title, color = ContentColor, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+            Text(subtitle, color = ContentColor.copy(0.6f), fontSize = 12.sp)
         }
     }
 }
@@ -166,6 +169,7 @@ fun ConfidenceArc(
         else -> RiskLow
     }
     val animatedPct by animateFloatAsState(percentage / 100f, tween(1200), label = "arc")
+    val trackColor = ContentColor
 
     Box(modifier = modifier.size(180.dp), contentAlignment = Alignment.Center) {
         Canvas(modifier = Modifier.fillMaxSize()) {
@@ -177,7 +181,7 @@ fun ConfidenceArc(
             )
             // Background track
             drawArc(
-                color = Color(0xFF0F172A).copy(0.08f),
+                color = trackColor.copy(0.08f),
                 startAngle = 135f, sweepAngle = 270f,
                 useCenter = false, topLeft = arcRect.topLeft,
                 size = arcRect.size,
@@ -199,7 +203,7 @@ fun ConfidenceArc(
                 fontWeight = FontWeight.Black,
                 fontSize = 32.sp
             )
-            Text("confidence", color = Color(0xFF0F172A).copy(0.5f), fontSize = 12.sp)
+            Text("confidence", color = trackColor.copy(0.5f), fontSize = 12.sp)
         }
     }
 }

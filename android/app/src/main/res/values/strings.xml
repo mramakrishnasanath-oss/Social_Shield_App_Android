@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Default Google OAuth Web Client ID. Generated from project settings in Firebase. -->
+    <string name="default_web_client_id" translatable="false">930673514003-tpsqsp8003m6v9j8sksndb228b3md5l4.apps.googleusercontent.com</string>
+</resources>

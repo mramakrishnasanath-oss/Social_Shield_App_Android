@@ -27,6 +27,7 @@ data class ScanResult(
     val realProbability: Float,
     val riskLevel: String,
     val explanations: List<String>,
+    val recommendations: List<String> = emptyList(),
     val heatmapBase64: String? = null,
     val metadata: Map<String, @Serializable(with = AnySerializer::class) Any?>? = null,
     val timestamp: String

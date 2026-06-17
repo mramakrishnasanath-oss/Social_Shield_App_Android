@@ -34,40 +34,47 @@ data class OnboardingPage(
     val features: List<String>
 )
 
-private val pages = listOf(
-    OnboardingPage(
-        Icons.Default.Shield,
-        NeonBlue,
-        "AI-Powered Protection",
-        "Real-time detection of deepfakes, scams, and digital manipulation using advanced neural networks.",
-        listOf("Deepfake image & video detection", "AI voice clone identification", "Phishing URL scanning")
-    ),
-    OnboardingPage(
-        Icons.Default.Visibility,
-        NeonPurple,
-        "See Through Deception",
-        "Explainable AI highlights exactly what was manipulated and why it was flagged as fake.",
-        listOf("Grad-CAM heatmap overlays", "Detailed manipulation reports", "Confidence scoring")
-    ),
-    OnboardingPage(
-        Icons.Default.Public,
-        NeonCyan,
-        "Global Fraud Intelligence",
-        "Crowd-sourced threat database and live fraud heatmap keep you ahead of emerging threats.",
-        listOf("Global fraud heatmap", "Community threat reporting", "Live scam alerts")
-    ),
-    OnboardingPage(
-        Icons.Default.VerifiedUser,
-        NeonPink,
-        "Your Digital Truth Score",
-        "Every scan contributes to your personal AI Trust Score — know your digital safety at a glance.",
-        listOf("Personal trust score", "Scan history & analytics", "Privacy-first processing")
-    )
-)
-
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun OnboardingScreen(onGetStarted: () -> Unit) {
+    val neonBlueVal = NeonBlue
+    val neonPurpleVal = NeonPurple
+    val neonCyanVal = NeonCyan
+    val neonPinkVal = NeonPink
+
+    val pages = remember(neonBlueVal, neonPurpleVal, neonCyanVal, neonPinkVal) {
+        listOf(
+            OnboardingPage(
+                Icons.Default.Shield,
+                neonBlueVal,
+                "AI-Powered Protection",
+                "Real-time detection of deepfakes, scams, and digital manipulation using advanced neural networks.",
+                listOf("Deepfake image & video detection", "AI voice clone identification", "Phishing URL scanning")
+            ),
+            OnboardingPage(
+                Icons.Default.Visibility,
+                neonPurpleVal,
+                "See Through Deception",
+                "Explainable AI highlights exactly what was manipulated and why it was flagged as fake.",
+                listOf("Grad-CAM heatmap overlays", "Detailed manipulation reports", "Confidence scoring")
+            ),
+            OnboardingPage(
+                Icons.Default.Public,
+                neonCyanVal,
+                "Global Fraud Intelligence",
+                "Crowd-sourced threat database and live fraud heatmap keep you ahead of emerging threats.",
+                listOf("Global fraud heatmap", "Community threat reporting", "Live scam alerts")
+            ),
+            OnboardingPage(
+                Icons.Default.VerifiedUser,
+                neonPinkVal,
+                "Your Digital Truth Score",
+                "Every scan contributes to your personal AI Trust Score — know your digital safety at a glance.",
+                listOf("Personal trust score", "Scan history & analytics", "Privacy-first processing")
+            )
+        )
+    }
+
     val pagerState = rememberPagerState { pages.size }
     val scope = rememberCoroutineScope()
 
@@ -97,7 +104,7 @@ fun OnboardingScreen(onGetStarted: () -> Unit) {
                             .height(8.dp)
                             .width(width)
                             .clip(RoundedCornerShape(4.dp))
-                            .background(if (selected) NeonBlue else NeonBlue.copy(0.3f))
+                            .background(if (selected) neonBlueVal else neonBlueVal.copy(0.3f))
                     )
                 }
             }
@@ -111,7 +118,7 @@ fun OnboardingScreen(onGetStarted: () -> Unit) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     TextButton(onClick = onGetStarted) {
-                        Text("Skip", color = Color(0xFF0F172A).copy(0.5f), fontSize = 14.sp)
+                        Text("Skip", color = ContentColor.copy(0.5f), fontSize = 14.sp)
                     }
                     NeonButton(
                         text = "Next →",
@@ -164,7 +171,7 @@ fun OnboardingPageContent(page: OnboardingPage) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
                     page.title,
-                    color = Color(0xFF0F172A),
+                    color = ContentColor,
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
@@ -173,7 +180,7 @@ fun OnboardingPageContent(page: OnboardingPage) {
                 Spacer(Modifier.height(16.dp))
                 Text(
                     page.subtitle,
-                    color = Color(0xFF0F172A).copy(0.65f),
+                    color = ContentColor.copy(0.65f),
                     fontSize = 15.sp,
                     textAlign = TextAlign.Center,
                     lineHeight = 22.sp
@@ -191,7 +198,7 @@ fun OnboardingPageContent(page: OnboardingPage) {
                             modifier = Modifier.size(8.dp).clip(CircleShape)
                                 .background(page.iconColor)
                         )
-                        Text(feature, color = Color(0xFF0F172A).copy(0.75f), fontSize = 14.sp)
+                        Text(feature, color = ContentColor.copy(0.75f), fontSize = 14.sp)
                     }
                 }
             }

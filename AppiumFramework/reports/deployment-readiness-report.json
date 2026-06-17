@@ -1,0 +1,19 @@
+{
+  "totalTests": 170,
+  "passed": 168,
+  "failed": 2,
+  "skipped": 0,
+  "coveragePercent": 100.0,
+  "defectCount": 2,
+  "criticalDefects": 0,
+  "majorDefects": 1,
+  "minorDefects": 1,
+  "scores": {
+    "functional": 96.0,
+    "validation": 100.0,
+    "ui": 96.0,
+    "security": 100.0,
+    "performance": 100.0
+  },
+  "verdict": "READY FOR PRODUCTION"
+}

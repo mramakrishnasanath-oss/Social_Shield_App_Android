@@ -40,6 +40,13 @@ private val ANALYSIS_STEPS = listOf(
 
 @Composable
 fun ProcessingScreen() {
+    val neonBlueColor = NeonBlue
+    val neonPurpleColor = NeonPurple
+    val riskLowColor = RiskLow
+    val contentColorVal = ContentColor
+    val deepBlackColor = DeepBlack
+    val glassWhiteColor = GlassWhite
+
     var currentStep by remember { mutableStateOf(0) }
     var completedSteps by remember { mutableStateOf(setOf<Int>()) }
 
@@ -62,7 +69,7 @@ fun ProcessingScreen() {
         modifier = Modifier
             .fillMaxSize()
             .background(Brush.radialGradient(
-                listOf(Color(0xFF080820), DeepBlack, Color(0xFF050515)),
+                listOf(Color(0xFF080820), deepBlackColor, Color(0xFF050515)),
                 radius = 1500f
             )),
         contentAlignment = Alignment.Center
@@ -72,7 +79,7 @@ fun ProcessingScreen() {
             repeat(20) { i ->
                 val x = (i * 137.5f) % size.width
                 val y = (i * 73.1f) % size.height
-                drawCircle(NeonBlue.copy(0.06f + (i % 3) * 0.02f), radius = 2f + (i % 4), center = Offset(x, y))
+                drawCircle(neonBlueColor.copy(0.06f + (i % 3) * 0.02f), radius = 2f + (i % 4), center = Offset(x, y))
             }
         }
 
@@ -92,7 +99,7 @@ fun ProcessingScreen() {
 
                     // Outer ring
                     drawArc(
-                        brush = Brush.sweepGradient(listOf(Color.Transparent, NeonBlue.copy(0.4f), NeonBlue)),
+                        brush = Brush.sweepGradient(listOf(Color.Transparent, neonBlueColor.copy(0.4f), neonBlueColor)),
                         startAngle = rotationAngle,
                         sweepAngle = 240f,
                         useCenter = false,
@@ -103,7 +110,7 @@ fun ProcessingScreen() {
 
                     // Inner ring
                     drawArc(
-                        color = NeonPurple.copy(0.6f),
+                        color = neonPurpleColor.copy(0.6f),
                         startAngle = outerRotation,
                         sweepAngle = 180f,
                         useCenter = false,
@@ -115,7 +122,7 @@ fun ProcessingScreen() {
                     // Center glow
                     drawCircle(
                         Brush.radialGradient(
-                            listOf(NeonBlue.copy(0.3f), NeonPurple.copy(0.1f), Color.Transparent),
+                            listOf(neonBlueColor.copy(0.3f), neonPurpleColor.copy(0.1f), Color.Transparent),
                             center = Offset(cx, cy), radius = r * 0.4f
                         ),
                         radius = r * 0.4f, center = Offset(cx, cy)
@@ -123,15 +130,15 @@ fun ProcessingScreen() {
 
                     // Scanning crosshair lines
                     val lineLen = r * 0.25f
-                    val crossColor = NeonBlue.copy(0.5f)
+                    val crossColor = neonBlueColor.copy(0.5f)
                     drawLine(crossColor, Offset(cx - lineLen, cy), Offset(cx + lineLen, cy), 1.5f)
                     drawLine(crossColor, Offset(cx, cy - lineLen), Offset(cx, cy + lineLen), 1.5f)
-                    drawCircle(NeonBlue.copy(0.9f), radius = 6f, center = Offset(cx, cy))
+                    drawCircle(neonBlueColor.copy(0.9f), radius = 6f, center = Offset(cx, cy))
                 }
 
                 Text(
                     "AI",
-                    color = Color(0xFF0F172A),
+                    color = contentColorVal,
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Black
                 )
@@ -141,7 +148,7 @@ fun ProcessingScreen() {
 
             Text(
                 "Analyzing…",
-                color = Color(0xFF0F172A),
+                color = contentColorVal,
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -150,7 +157,7 @@ fun ProcessingScreen() {
 
             Text(
                 "Our AI is examining your content",
-                color = Color(0xFF0F172A).copy(0.5f),
+                color = contentColorVal.copy(0.5f),
                 fontSize = 14.sp
             )
 
@@ -161,7 +168,7 @@ fun ProcessingScreen() {
                 modifier = Modifier
                     .padding(horizontal = 40.dp)
                     .clip(RoundedCornerShape(20.dp))
-                    .background(GlassWhite)
+                    .background(glassWhiteColor)
                     .padding(20.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
@@ -181,7 +188,7 @@ fun ProcessingScreen() {
                                 Icon(
                                     Icons.Default.CheckCircle,
                                     null,
-                                    tint = RiskLow,
+                                    tint = riskLowColor,
                                     modifier = Modifier.size(18.dp)
                                 )
                             } else if (isCurrent) {
@@ -192,23 +199,23 @@ fun ProcessingScreen() {
                                     modifier = Modifier
                                         .size(18.dp)
                                         .clip(CircleShape)
-                                        .background(NeonBlue.copy(dotAnim))
+                                        .background(neonBlueColor.copy(dotAnim))
                                 )
                             } else {
                                 Box(
                                     modifier = Modifier
                                         .size(18.dp)
                                         .clip(CircleShape)
-                                        .background(GlassWhite)
+                                        .background(glassWhiteColor)
                                 )
                             }
 
                             Text(
                                 step,
                                 color = when {
-                                    isDone -> Color(0xFF0F172A).copy(0.5f)
-                                    isCurrent -> Color(0xFF0F172A)
-                                    else -> Color(0xFF0F172A).copy(0.3f)
+                                    isDone -> contentColorVal.copy(0.5f)
+                                    isCurrent -> contentColorVal
+                                    else -> contentColorVal.copy(0.3f)
                                 },
                                 fontSize = 13.sp,
                                 fontWeight = if (isCurrent) FontWeight.SemiBold else FontWeight.Normal

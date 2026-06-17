@@ -29,6 +29,7 @@ class ScanResult(BaseModel):
     real_probability: float
     risk_level: str  # LOW / MEDIUM / HIGH
     explanations: list[str]
+    recommendations: list[str] = []
     heatmap_base64: Optional[str] = None
     metadata: Optional[dict[str, Any]] = None
     timestamp: str

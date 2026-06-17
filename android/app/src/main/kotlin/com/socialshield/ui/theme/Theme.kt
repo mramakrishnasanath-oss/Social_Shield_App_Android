@@ -13,73 +13,119 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import androidx.compose.runtime.ReadOnlyComposable
 
 // ─── Cybersecurity Color Palette ─────────────────────────────────────────────
 
-val NeonBlue = Color(0xFF2563EB) // Royal Blue
-val NeonPurple = Color(0xFF7C3AED) // Deep Purple
-val NeonCyan = Color(0xFF059669) // Emerald
-val NeonPink = Color(0xFFDB2777) // Pink
-val DeepBlack = Color(0xFFFFFFFF) // White background (names kept to avoid breaking refs)
-val DarkSurface = Color(0xFFF8FAFC) // Light Gray Surface
-val DarkCard = Color(0xFFF1F5F9) // Light Card
-val DarkElevated = Color(0xFFE2E8F0) // Elevated Light Card
-val GlassWhite = Color(0x1A000000) // Dark Glass (inverted)
-val GlassBorder = Color(0x26000000) // Dark Glass Border (inverted)
+val NeonBlue: Color
+    @Composable
+    @ReadOnlyComposable
+    get() = if (MaterialTheme.colorScheme.background == Color(0xFFFFF6F0)) Color(0xFFD6A77A) else Color(0xFF38BDF8)
+
+val NeonPurple: Color
+    @Composable
+    @ReadOnlyComposable
+    get() = if (MaterialTheme.colorScheme.background == Color(0xFFFFF6F0)) Color(0xFFF4C9A8) else Color(0xFF60A5FA)
+
+val NeonCyan: Color
+    @Composable
+    @ReadOnlyComposable
+    get() = if (MaterialTheme.colorScheme.background == Color(0xFFFFF6F0)) Color(0xFFD6A77A) else Color(0xFF7DD3FC)
+
+val NeonPink: Color
+    @Composable
+    @ReadOnlyComposable
+    get() = if (MaterialTheme.colorScheme.background == Color(0xFFFFF6F0)) Color(0xFFF4C9A8) else Color(0xFFF472B6)
+
+// Compatibility getters for theme-based colors
+val DeepBlack: Color
+    @Composable
+    @ReadOnlyComposable
+    get() = MaterialTheme.colorScheme.background
+
+val DarkSurface: Color
+    @Composable
+    @ReadOnlyComposable
+    get() = MaterialTheme.colorScheme.surface
+
+val DarkCard: Color
+    @Composable
+    @ReadOnlyComposable
+    get() = MaterialTheme.colorScheme.surfaceVariant
+
+val DarkElevated: Color
+    @Composable
+    @ReadOnlyComposable
+    get() = MaterialTheme.colorScheme.surfaceVariant
+
+val GlassWhite: Color
+    @Composable
+    @ReadOnlyComposable
+    get() = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f)
+
+val GlassBorder: Color
+    @Composable
+    @ReadOnlyComposable
+    get() = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
+
+val ContentColor: Color
+    @Composable
+    @ReadOnlyComposable
+    get() = MaterialTheme.colorScheme.onBackground
 
 // Risk colors
 val RiskHigh = Color(0xFFFF3B3B)
 val RiskMedium = Color(0xFFFFB800)
-val RiskLow = Color(0xFF06FFA5)
+val RiskLow = Color(0xFF00E676) // Premium bright green
 
-val VerdictReal = Color(0xFF06FFA5)
+val VerdictReal = Color(0xFF00E676)
 val VerdictFake = Color(0xFFFF3B3B)
 val VerdictSuspicious = Color(0xFFFFB800)
 
 // ─── Dark Color Scheme ────────────────────────────────────────────────────────
 
 private val DarkColorScheme = darkColorScheme(
-    primary = NeonBlue,
-    onPrimary = DeepBlack,
-    primaryContainer = Color(0xFF001F3D),
-    onPrimaryContainer = NeonBlue,
-    secondary = NeonPurple,
+    primary = Color(0xFF38BDF8),
+    onPrimary = Color(0xFF0F172A),
+    primaryContainer = Color(0xFF0F172A),
+    onPrimaryContainer = Color(0xFF38BDF8),
+    secondary = Color(0xFF60A5FA),
     onSecondary = Color(0xFF0F172A),
-    secondaryContainer = Color(0xFF2A1060),
-    onSecondaryContainer = NeonPurple,
-    tertiary = NeonCyan,
-    onTertiary = DeepBlack,
-    background = DeepBlack,
-    onBackground = Color(0xFF0F172A),
-    surface = DarkSurface,
-    onSurface = Color(0xFF0F172A),
-    surfaceVariant = DarkCard,
-    onSurfaceVariant = Color(0xFFB0B0D0),
-    outline = GlassBorder,
+    secondaryContainer = Color(0xFF1E293B),
+    onSecondaryContainer = Color(0xFF60A5FA),
+    tertiary = Color(0xFF7DD3FC),
+    onTertiary = Color(0xFF0F172A),
+    background = Color(0xFF0F172A),
+    onBackground = Color(0xFFFFFFFF),
+    surface = Color(0xFF1E293B),
+    onSurface = Color(0xFFFFFFFF),
+    surfaceVariant = Color(0xFF1E293B),
+    onSurfaceVariant = Color(0xFF94A3B8),
+    outline = Color(0x26FFFFFF),
     error = RiskHigh,
-    onError = Color(0xFF0F172A)
+    onError = Color(0xFFFFFFFF)
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Color(0xFF0066CC),
-    onPrimary = Color(0xFF0F172A),
-    primaryContainer = Color(0xFFD6EAFF),
-    onPrimaryContainer = Color(0xFF001D36),
-    secondary = Color(0xFF6B4EBE),
-    onSecondary = Color(0xFF0F172A),
-    secondaryContainer = Color(0xFFECE0FF),
-    onSecondaryContainer = Color(0xFF1E005A),
-    tertiary = Color(0xFF007A57),
-    onTertiary = Color(0xFF0F172A),
-    background = Color(0xFFF0F4FF),
-    onBackground = Color(0xFF0A0A1A),
-    surface = Color(0xFF0F172A),
-    onSurface = Color(0xFF0A0A1A),
-    surfaceVariant = Color(0xFFE8EEFF),
-    onSurfaceVariant = Color(0xFF44444F),
-    outline = Color(0xFFCCCCDD),
+    primary = Color(0xFFD6A77A),
+    onPrimary = Color(0xFFFFFFFF),
+    primaryContainer = Color(0xFFFFF6F0),
+    onPrimaryContainer = Color(0xFF2D2D2D),
+    secondary = Color(0xFFF4C9A8),
+    onSecondary = Color(0xFF2D2D2D),
+    secondaryContainer = Color(0xFFFFFFFF),
+    onSecondaryContainer = Color(0xFF2D2D2D),
+    tertiary = Color(0xFFF4C9A8),
+    onTertiary = Color(0xFF2D2D2D),
+    background = Color(0xFFFFF6F0),
+    onBackground = Color(0xFF2D2D2D),
+    surface = Color(0xFFFFFFFF),
+    onSurface = Color(0xFF2D2D2D),
+    surfaceVariant = Color(0xFFFFFFFF),
+    onSurfaceVariant = Color(0xFF64748B),
+    outline = Color(0x26000000),
     error = Color(0xFFCC0000),
-    onError = Color(0xFF0F172A)
+    onError = Color(0xFFFFFFFF)
 )
 
 // ─── Typography ───────────────────────────────────────────────────────────────

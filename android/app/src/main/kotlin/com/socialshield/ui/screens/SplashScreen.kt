@@ -23,6 +23,12 @@ import com.socialshield.ui.theme.*
 
 @Composable
 fun SplashScreen(onNavigateNext: () -> Unit) {
+    val neonBlueColor = NeonBlue
+    val neonPurpleColor = NeonPurple
+    val neonCyanColor = NeonCyan
+    val deepBlackColor = DeepBlack
+    val contentColorVal = ContentColor
+
     var logoVisible by remember { mutableStateOf(false) }
     var taglineVisible by remember { mutableStateOf(false) }
 
@@ -60,7 +66,7 @@ fun SplashScreen(onNavigateNext: () -> Unit) {
         modifier = Modifier
             .fillMaxSize()
             .background(Brush.radialGradient(
-                colors = listOf(Color(0xFF0A0A2E), DeepBlack, Color(0xFF05050F)),
+                colors = listOf(Color(0xFF0A0A2E), deepBlackColor, Color(0xFF05050F)),
                 center = Offset(0.5f, 0.4f),
                 radius = 1200f
             )),
@@ -68,7 +74,7 @@ fun SplashScreen(onNavigateNext: () -> Unit) {
     ) {
         // Background grid lines
         Canvas(Modifier.fillMaxSize()) {
-            val gridColor = NeonBlue.copy(alpha = 0.04f)
+            val gridColor = neonBlueColor.copy(alpha = 0.04f)
             val spacing = 40.dp.toPx()
             var x = 0f
             while (x < size.width) {
@@ -83,7 +89,7 @@ fun SplashScreen(onNavigateNext: () -> Unit) {
             // Scanning line
             val scanY = scanLine * size.height
             drawLine(
-                Brush.horizontalGradient(listOf(Color.Transparent, NeonBlue.copy(0.6f), Color.Transparent)),
+                Brush.horizontalGradient(listOf(Color.Transparent, neonBlueColor.copy(0.6f), Color.Transparent)),
                 Offset(0f, scanY), Offset(size.width, scanY), 2f
             )
         }
@@ -105,7 +111,7 @@ fun SplashScreen(onNavigateNext: () -> Unit) {
                     // Outer glow rings
                     repeat(3) { i ->
                         drawCircle(
-                            NeonBlue.copy(alpha = glowPulse * 0.15f / (i + 1)),
+                            neonBlueColor.copy(alpha = glowPulse * 0.15f / (i + 1)),
                             radius = r * (1f + i * 0.25f),
                             center = Offset(cx, cy)
                         )
@@ -113,7 +119,7 @@ fun SplashScreen(onNavigateNext: () -> Unit) {
 
                     // Rotating dashes ring
                     drawArc(
-                        color = NeonBlue.copy(0.5f),
+                        color = neonBlueColor.copy(0.5f),
                         startAngle = rotationAnim,
                         sweepAngle = 120f,
                         useCenter = false,
@@ -122,7 +128,7 @@ fun SplashScreen(onNavigateNext: () -> Unit) {
                         style = Stroke(3f, pathEffect = PathEffect.dashPathEffect(floatArrayOf(15f, 10f)))
                     )
                     drawArc(
-                        color = NeonPurple.copy(0.5f),
+                        color = neonPurpleColor.copy(0.5f),
                         startAngle = rotationAnim + 180f,
                         sweepAngle = 120f,
                         useCenter = false,
@@ -134,7 +140,7 @@ fun SplashScreen(onNavigateNext: () -> Unit) {
                     // Shield fill
                     drawCircle(
                         Brush.radialGradient(
-                            listOf(NeonPurple.copy(0.4f), NeonBlue.copy(0.2f), Color.Transparent),
+                            listOf(neonPurpleColor.copy(0.4f), neonBlueColor.copy(0.2f), Color.Transparent),
                             center = Offset(cx, cy), radius = r * 0.7f
                         ),
                         radius = r * 0.7f, center = Offset(cx, cy)
@@ -142,7 +148,7 @@ fun SplashScreen(onNavigateNext: () -> Unit) {
 
                     // Shield border
                     drawCircle(
-                        Brush.sweepGradient(listOf(NeonBlue, NeonPurple, NeonCyan, NeonBlue)),
+                        Brush.sweepGradient(listOf(neonBlueColor, neonPurpleColor, neonCyanColor, neonBlueColor)),
                         radius = r * 0.7f, center = Offset(cx, cy),
                         style = Stroke(2.5f)
                     )
@@ -151,7 +157,7 @@ fun SplashScreen(onNavigateNext: () -> Unit) {
                 // SS text in center
                 Text(
                     "SS",
-                    color = Color(0xFF0F172A),
+                    color = contentColorVal,
                     fontSize = 32.sp,
                     fontWeight = FontWeight.Black,
                     letterSpacing = (-2).sp
@@ -162,7 +168,7 @@ fun SplashScreen(onNavigateNext: () -> Unit) {
 
             Text(
                 "SocialShield",
-                color = Color(0xFF0F172A),
+                color = contentColorVal,
                 fontSize = 34.sp,
                 fontWeight = FontWeight.Black,
                 letterSpacing = (-1).sp,
@@ -173,7 +179,7 @@ fun SplashScreen(onNavigateNext: () -> Unit) {
 
             Text(
                 "Verify Reality with AI",
-                color = NeonBlue,
+                color = neonBlueColor,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium,
                 letterSpacing = 3.sp,
@@ -196,7 +202,7 @@ fun SplashScreen(onNavigateNext: () -> Unit) {
                     Box(
                         modifier = Modifier
                             .size(6.dp)
-                            .background(NeonBlue.copy(dotAnim), androidx.compose.foundation.shape.CircleShape)
+                            .background(neonBlueColor.copy(dotAnim), androidx.compose.foundation.shape.CircleShape)
                     )
                 }
             }
