@@ -33,8 +33,7 @@ jobs:
 
     - name: Start Appium Server
       run: |
-        appium --port 4723 &
-      background: true
+        nohup appium --port 4723 > /dev/null 2>&1 &
 
     - name: Build Android App debug APK
       run: |
