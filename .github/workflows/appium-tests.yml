@@ -8,7 +8,7 @@ on:
 
 jobs:
   appium-tests:
-    runs-on: macos-latest # macOS has HAXM/Android emulator acceleration support on GitHub Actions
+    runs-on: macos-13 # macOS 13 is Intel-based, enabling hardware acceleration for x86_64 emulators
 
     steps:
     - name: Checkout Source Code
