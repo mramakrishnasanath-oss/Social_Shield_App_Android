@@ -15,7 +15,7 @@ function Toggle({ id, checked, onChange }) {
 function Section({ title, children }) {
   return (
     <div className="glass-card" style={{ marginBottom: 16 }}>
-      <h3 style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 16 }}>
+      <h3 style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.4)', letterSpacing: 1, marginBottom: 16 }}>
         {title}
       </h3>
       {children}
@@ -130,7 +130,7 @@ export default function SettingsPage() {
 
         {/* Danger */}
         <div className="glass-card" style={{ border:'1px solid rgba(255,59,59,0.2)' }}>
-          <h3 style={{ fontSize:12, fontWeight:700, color:'var(--risk-high)', textTransform:'uppercase', letterSpacing:1, marginBottom:16 }}>
+          <h3 style={{ fontSize:12, fontWeight:700, color:'var(--risk-high)', letterSpacing:1, marginBottom:16 }}>
             Danger Zone
           </h3>
           <div style={{ display:'flex', gap:12, flexWrap:'wrap' }}>
