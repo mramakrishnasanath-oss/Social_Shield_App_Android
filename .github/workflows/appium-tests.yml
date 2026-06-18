@@ -8,11 +8,17 @@ on:
 
 jobs:
   appium-tests:
-    runs-on: macos-15-intel
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout Source Code
       uses: actions/checkout@v4
+
+    - name: Enable KVM group perms
+      run: |
+        echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+        sudo udevadm control --reload-rules
+        sudo udevadm trigger --name-match=kvm
 
     - name: Set up Java 21 JDK
       uses: actions/setup-java@v4
@@ -41,20 +47,21 @@ jobs:
         chmod +x gradlew
         ./gradlew assembleDebug
         # Copy to the path configured in config.properties
-        mkdir -p /Users/runner/work/SocialShield/SocialShield/app-build/
-        cp app/build/outputs/apk/debug/app-debug.apk /Users/runner/work/SocialShield/SocialShield/app-build/SocialShield.apk
+        mkdir -p $GITHUB_WORKSPACE/app-build/
+        cp app/build/outputs/apk/debug/app-debug.apk $GITHUB_WORKSPACE/app-build/SocialShield.apk
 
     - name: Set up Android Emulator
       uses: reactivecircus/android-emulator-runner@v2
       with:
-        api-level: 34
+        api-level: 30
         target: google_apis
         arch: x86_64
         disable-animations: true
         emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
         script: |
-          # Overwrite app.path in config.properties to match runner directories
-          sed -i '' 's|app.path=.*|app.path=/Users/runner/work/SocialShield/SocialShield/app-build/SocialShield.apk|g' AppiumFramework/config.properties
+          # Overwrite app.path and platform.version in config.properties to match runner settings
+          sed -i "s|app.path=.*|app.path=$GITHUB_WORKSPACE/app-build/SocialShield.apk|g" AppiumFramework/config.properties
+          sed -i "s|platform.version=.*|platform.version=11.0|g" AppiumFramework/config.properties
           cd AppiumFramework
           mvn clean test
 
