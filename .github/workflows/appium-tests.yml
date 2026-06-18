@@ -8,7 +8,7 @@ on:
 
 jobs:
   appium-tests:
-    runs-on: macos-13 # macOS 13 is Intel-based, enabling hardware acceleration for x86_64 emulators
+    runs-on: macos-latest # macOS has hardware virtualization support on Apple Silicon runners
 
     steps:
     - name: Checkout Source Code
@@ -49,7 +49,7 @@ jobs:
       with:
         api-level: 34
         target: google_apis
-        arch: x86_64
+        arch: arm64-v8a
         script: |
           # Overwrite app.path in config.properties to match runner directories
           sed -i '' 's|app.path=.*|app.path=/Users/runner/work/SocialShield/SocialShield/app-build/SocialShield.apk|g' AppiumFramework/config.properties
