@@ -62,8 +62,7 @@ jobs:
           # Overwrite app.path and platform.version in config.properties to match runner settings
           sed -i "s|app.path=.*|app.path=$GITHUB_WORKSPACE/app-build/SocialShield.apk|g" AppiumFramework/config.properties
           sed -i "s|platform.version=.*|platform.version=11.0|g" AppiumFramework/config.properties
-          cd AppiumFramework
-          mvn clean test
+          cd AppiumFramework && mvn clean test
 
     - name: Upload Test Automation Reports Artifacts
       if: always()
