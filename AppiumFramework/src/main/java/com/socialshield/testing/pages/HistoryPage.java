@@ -54,6 +54,6 @@ public class HistoryPage extends BasePage {
     }
 
     public void clickBack() {
-        click(backButton);
+        clickBackButton();
     }
 }

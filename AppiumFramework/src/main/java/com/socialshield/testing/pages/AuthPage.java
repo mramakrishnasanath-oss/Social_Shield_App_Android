@@ -116,6 +116,12 @@ public class AuthPage extends BasePage {
             accountElement.click();
         } catch (Exception e) {
             logger.warn("Google account chooser dialog did not appear or was not clickable: " + e.getMessage());
+            try {
+                logger.info("Dismissing external Google Sign-In overlay via system back key...");
+                driver.navigate().back();
+            } catch (Exception ex) {
+                logger.warn("Failed to press back key: " + ex.getMessage());
+            }
         }
     }
 }

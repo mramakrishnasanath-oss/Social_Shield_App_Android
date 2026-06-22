@@ -187,7 +187,7 @@ fun HistoryItem(
             onClick = onDelete,
             modifier = Modifier.size(32.dp)
         ) {
-            Icon(Icons.Default.DeleteOutline, null, tint = ContentColor.copy(0.3f), modifier = Modifier.size(18.dp))
+            Icon(Icons.Default.DeleteOutline, "Delete", tint = ContentColor.copy(0.3f), modifier = Modifier.size(18.dp))
         }
     }
 }

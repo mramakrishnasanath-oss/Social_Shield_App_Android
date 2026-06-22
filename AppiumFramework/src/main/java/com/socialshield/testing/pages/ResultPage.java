@@ -53,6 +53,6 @@ public class ResultPage extends BasePage {
     }
 
     public void clickBack() {
-        click(backButton);
+        clickBackButton();
     }
 }

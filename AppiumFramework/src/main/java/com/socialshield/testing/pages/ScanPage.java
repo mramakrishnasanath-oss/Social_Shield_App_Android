@@ -74,7 +74,7 @@ public class ScanPage extends BasePage {
     }
 
     public void clickBack() {
-        click(backButton);
+        clickBackButton();
     }
 
     public boolean isScanTitleDisplayed(String typeName) {

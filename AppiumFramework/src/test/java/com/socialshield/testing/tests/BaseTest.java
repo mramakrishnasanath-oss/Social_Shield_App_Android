@@ -34,6 +34,23 @@ public class BaseTest {
             settingsPage = new SettingsPage(driver);
             
             logger.info("Page objects initialized successfully.");
+            
+            // Auto-login for non-Auth tests to avoid test isolation/reset issues in GHA
+            if (!this.getClass().getSimpleName().equals("AuthTests")) {
+                logger.info("Performing auto-login setup for " + this.getClass().getSimpleName());
+                try {
+                    authPage.skipOnboarding();
+                    if (authPage.isAuthScreenDisplayed()) {
+                        authPage.login("demo-google@socialshield.com", "socialshield123");
+                    }
+                    if (!homePage.isDashboardDisplayed()) {
+                        logger.warn("Auto-login did not reach dashboard, trying fallback signup...");
+                        authPage.signUp("demo-google@socialshield.com", "socialshield123");
+                    }
+                } catch (Exception e) {
+                    logger.warn("Auto-login failed in setUpClass: " + e.getMessage());
+                }
+            }
         } catch (Exception e) {
             logger.error("Failed to set up Appium driver", e);
             throw e;
