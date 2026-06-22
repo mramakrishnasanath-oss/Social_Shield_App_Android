@@ -28,7 +28,7 @@ fs.writeFileSync(RESULTS_FILE, JSON.stringify(fallbackRecord) + '\n', 'utf8');
 
 startRun();
 recordTest(fallbackRecord);
-generateReport(excelPath);
+generateReport(excelPath, RESULTS_FILE);
 
 generateHtmlReport(RESULTS_FILE, htmlPath);
 

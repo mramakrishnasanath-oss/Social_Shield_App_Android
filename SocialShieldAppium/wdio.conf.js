@@ -140,7 +140,7 @@ exports.config = {
         const htmlPath = path.join(reportsDir, 'execution-report.html');
         
         // 1. Generate Excel Report
-        generateReport(excelPath);
+        generateReport(excelPath, RESULTS_FILE);
         
         // 2. Generate HTML Report
         generateHtmlReport(RESULTS_FILE, htmlPath);

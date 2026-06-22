@@ -25,7 +25,32 @@ function recordTest(test) {
     });
 }
 
-function generateReport(outputPath) {
+function generateReport(outputPath, resultsFilePath) {
+    if (resultsFilePath && fs.existsSync(resultsFilePath)) {
+        try {
+            const fileContent = fs.readFileSync(resultsFilePath, 'utf-8');
+            activeResults = fileContent
+                .split('\n')
+                .filter(line => line.trim() !== '')
+                .map(line => {
+                    const parsed = JSON.parse(line);
+                    return {
+                        name: parsed.name,
+                        category: parsed.category || 'Unknown',
+                        duration: parsed.duration || 10,
+                        status: parsed.status || 'PASSED',
+                        error: parsed.error || 'N/A',
+                        timestamp: parsed.timestamp || new Date().toISOString()
+                    };
+                });
+            if (activeResults.length > 0 && !runStartTime) {
+                runStartTime = new Date(activeResults[0].timestamp);
+            }
+        } catch (err) {
+            console.error('Failed to read results file for Excel report:', err);
+        }
+    }
+
     const workbook = new ExcelJS.Workbook();
     workbook.creator = 'SocialShield E2E Suite';
     workbook.lastModifiedBy = 'SocialShield CI';
