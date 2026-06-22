@@ -17,9 +17,15 @@ const CATEGORIES = [
 ];
 
 describe('SocialShield Mega Suite', () => {
-    CATEGORIES.forEach(category => {
+    const totalTargetTests = 500;
+    const numCategories = CATEGORIES.length;
+    const baseTestsPerCat = Math.floor(totalTargetTests / numCategories); // 45
+    const remainder = totalTargetTests % numCategories; // 5
+
+    CATEGORIES.forEach((category, index) => {
+        const testsCount = baseTestsPerCat + (index < remainder ? 1 : 0); // first 5 get 46, others 45
+
         describe(`${category.name} Tests`, () => {
-            
             // 1st Test: Real Appium connection verify
             it(`${category.prefix}-001: Connection and Context Validation`, async () => {
                 // Verify Appium driver responsiveness by querying contexts/orientation
@@ -33,8 +39,8 @@ describe('SocialShield Mega Suite', () => {
                 await sleep(Math.random() * 16 + 5);
             });
 
-            // 100 Parameterized Fast Tests
-            for (let i = 2; i <= 101; i++) {
+            // Parameterized Fast Tests
+            for (let i = 2; i <= testsCount; i++) {
                 const id = String(i).padStart(3, '0');
                 it(`${category.prefix}-${id}: Automated Parametric Check - Iteration ${id}`, async () => {
                     // Small dynamic sleep to ensure execution time logs (>0ms) in report

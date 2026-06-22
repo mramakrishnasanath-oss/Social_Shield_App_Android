@@ -10,8 +10,14 @@ function generateHtmlReport(jsonlPath, outputPath) {
     if (isMock) {
         console.log('Results file not found or --mock passed. Building mock report data...');
         const categories = ['Functional', 'UIUX', 'Compatibility', 'Performance', 'Security', 'API', 'Database', 'Accessibility', 'MobileSpecific', 'Regression', 'E2E'];
-        categories.forEach(cat => {
-            for (let i = 1; i <= 101; i++) {
+        const totalTargetTests = 500;
+        const numCategories = categories.length;
+        const baseTestsPerCat = Math.floor(totalTargetTests / numCategories); // 45
+        const remainder = totalTargetTests % numCategories; // 5
+
+        categories.forEach((cat, index) => {
+            const testsCount = baseTestsPerCat + (index < remainder ? 1 : 0);
+            for (let i = 1; i <= testsCount; i++) {
                 const id = String(i).padStart(3, '0');
                 const isFail = cat === 'Security' && i === 45; // mock one failure
                 results.push({
