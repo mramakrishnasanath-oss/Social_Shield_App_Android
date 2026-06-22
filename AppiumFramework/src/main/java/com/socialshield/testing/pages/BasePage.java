@@ -46,7 +46,14 @@ public class BasePage {
     protected void sendKeys(By locator, String text) {
         logger.info("Sending text '" + text + "' to element: " + locator);
         WebElement element = waitForElementVisible(locator);
+        element.click();
         element.clear();
+        String val = element.getText();
+        if (val != null && !val.isEmpty() && !val.equals("Email") && !val.equals("Password")) {
+            for (int i = 0; i < val.length() + 10; i++) {
+                element.sendKeys("\b");
+            }
+        }
         element.sendKeys(text);
     }
 
@@ -87,7 +94,7 @@ public class BasePage {
         driver.perform(Collections.singletonList(swipe));
     }
 
-    protected void scrollDown() {
+    public void scrollDown() {
         logger.info("Scrolling down...");
         Dimension size = driver.manage().window().getSize();
         int startX = size.width / 2;
@@ -96,7 +103,7 @@ public class BasePage {
         swipe(startX, startY, startX, endY);
     }
 
-    protected void scrollUp() {
+    public void scrollUp() {
         logger.info("Scrolling up...");
         Dimension size = driver.manage().window().getSize();
         int startX = size.width / 2;
@@ -105,8 +112,19 @@ public class BasePage {
         swipe(startX, startY, startX, endY);
     }
 
-    protected void clickBackButton() {
+    public void clickBackButton() {
         logger.info("Pressing Android system back button");
         driver.navigate().back();
+    }
+
+    public void hideKeyboard() {
+        try {
+            if (driver.isKeyboardShown()) {
+                logger.info("Hiding software keyboard...");
+                driver.hideKeyboard();
+            }
+        } catch (Exception e) {
+            logger.warn("Could not hide keyboard: " + e.getMessage());
+        }
     }
 }

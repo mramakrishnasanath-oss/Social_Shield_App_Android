@@ -32,3 +32,8 @@ __pycache__/
 *.njsproj
 *.sln
 *.sw?
+*.zip
+/apache-maven-3.9.6/
+/app-build/
+/flutter_app/android/build/
+/flutter_app/build/

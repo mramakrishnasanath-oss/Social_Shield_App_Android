@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SocialShield Mobile E2E Execution Report</title>
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --card-bg: #161b22;
+            --border-color: #30363d;
+            --text-primary: #c9d1d9;
+            --text-secondary: #8b949e;
+            --accent-blue: #58a6ff;
+            --success-color: #2ecc71;
+            --fail-color: #e05a47;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 24px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 16px;
+            margin-bottom: 24px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 24px;
+            color: var(--accent-blue);
+        }
+        .timestamp {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+        .card-val {
+            font-size: 32px;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+        .val-pass { color: var(--success-color); }
+        .val-fail { color: var(--fail-color); }
+        .val-blue { color: var(--accent-blue); }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+        @media(min-width: 850px) {
+            .main-content {
+                grid-template-columns: 350px 1fr;
+            }
+        }
+        .sidebar {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            height: fit-content;
+        }
+        .section-title {
+            margin-top: 0;
+            margin-bottom: 16px;
+            font-size: 18px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+        .category-row {
+            margin-bottom: 14px;
+        }
+        .category-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+        .category-name {
+            font-weight: bold;
+        }
+        .category-count {
+            color: var(--text-secondary);
+        }
+        .progress-bar-bg {
+            background-color: #21262d;
+            height: 6px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-bar-fg {
+            height: 100%;
+            border-radius: 4px;
+        }
+        .details-panel {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .search-box {
+            background-color: #0d1117;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            width: 250px;
+        }
+        .filter-btn {
+            background-color: #21262d;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .filter-btn.active {
+            background-color: var(--accent-blue);
+            color: #000;
+            border-color: var(--accent-blue);
+            font-weight: bold;
+        }
+        .table-container {
+            overflow-x: auto;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            text-align: left;
+        }
+        th, td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        th {
+            background-color: #21262d;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .badge {
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .status-pass {
+            background-color: rgba(46, 204, 113, 0.15);
+            color: var(--success-color);
+        }
+        .status-fail {
+            background-color: rgba(224, 90, 71, 0.15);
+            color: var(--fail-color);
+        }
+        .badge-cat {
+            background-color: #21262d;
+            color: var(--text-secondary);
+        }
+        .error-text {
+            color: var(--fail-color);
+            font-family: monospace;
+            font-size: 11px;
+            background-color: #21262d;
+            padding: 4px;
+            border-radius: 4px;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div>
+                <h1>SocialShield Mobile E2E Testing</h1>
+                <div class="timestamp">Execution Report • Generated on 22/6/2026, 8:42:29 am</div>
+            </div>
+            <div>
+                <span class="badge status-fail" style="font-size: 14px; padding: 6px 12px;">
+                    STABILITY WARNING
+                </span>
+            </div>
+        </header>
+        
+        <div class="stats-grid">
+            <div class="card">
+                <div style="font-size: 12px; color: var(--text-secondary);">Total Test Cases</div>
+                <div class="card-val val-blue">1</div>
+            </div>
+            <div class="card">
+                <div style="font-size: 12px; color: var(--text-secondary);">Passed</div>
+                <div class="card-val val-pass">0</div>
+            </div>
+            <div class="card">
+                <div style="font-size: 12px; color: var(--text-secondary);">Failed</div>
+                <div class="card-val val-fail">1</div>
+            </div>
+            <div class="card">
+                <div style="font-size: 12px; color: var(--text-secondary);">Pass Rate</div>
+                <div class="card-val val-fail">0.00%</div>
+            </div>
+            <div class="card">
+                <div style="font-size: 12px; color: var(--text-secondary);">Execution Duration</div>
+                <div class="card-val val-blue">0.10 s</div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="sidebar">
+                <h3 class="section-title">By Category Summary</h3>
+                
+        <div class="category-row">
+            <div class="category-meta">
+                <span class="category-name">E2E</span>
+                <span class="category-count">0/1 Passed (0.0%)</span>
+            </div>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fg" style="width: 0.0%; background-color: #e05a47;"></div>
+            </div>
+        </div>
+        
+            </div>
+            
+            <div class="details-panel">
+                <h3 class="section-title">Detailed Test Cases</h3>
+                <div class="controls">
+                    <input type="text" id="search" class="search-box" placeholder="Search test cases...">
+                    <div style="display: flex; gap: 8px;">
+                        <button class="filter-btn active" data-filter="all">All</button>
+                        <button class="filter-btn" data-filter="PASSED">Passed</button>
+                        <button class="filter-btn" data-filter="FAILED">Failed</button>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Test Case Name</th>
+                                <th>Category</th>
+                                <th>Status</th>
+                                <th>Duration</th>
+                                <th>Error Log</th>
+                            </tr>
+                        </thead>
+                        <tbody id="test-body">
+                            
+        <tr class="test-row" data-status="FAILED" data-category="E2E">
+            <td>1</td>
+            <td class="test-name-cell">Fatal Suite Execution Failure</td>
+            <td><span class="badge badge-cat">E2E</span></td>
+            <td><span class="badge status-fail">FAILED</span></td>
+            <td>100 ms</td>
+            <td class="error-cell"><div class="error-text">The mobile testing suite exited early due to a driver or compilation crash. Verify emulator setup and local server logs.</div></td>
+        </tr>
+        
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const searchInput = document.getElementById('search');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const testRows = document.querySelectorAll('.test-row');
+        
+        let activeFilter = 'all';
+        let searchQuery = '';
+        
+        function updateFilter() {
+            testRows.forEach(row => {
+                const status = row.getAttribute('data-status');
+                const name = row.querySelector('.test-name-cell').textContent.toLowerCase();
+                
+                const matchesStatus = (activeFilter === 'all' || status === activeFilter);
+                const matchesSearch = name.includes(searchQuery);
+                
+                if (matchesStatus && matchesSearch) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+        
+        searchInput.addEventListener('input', (e) => {
+            searchQuery = e.target.value.toLowerCase();
+            updateFilter();
+        });
+        
+        filterButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                activeFilter = btn.getAttribute('data-filter');
+                updateFilter();
+            });
+        });
+    </script>
+</body>
+</html>

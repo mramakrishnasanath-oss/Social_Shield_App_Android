@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../../config/app_config.dart';
 import '../../core/constants/app_constants.dart';
 
@@ -11,8 +12,8 @@ class DioClient {
     _dio = Dio(
       BaseOptions(
         baseUrl: AppConfig.baseUrl,
-        connectTimeout: const Duration(seconds: 30),
-        receiveTimeout: const Duration(seconds: 30),
+        connectTimeout: const Duration(seconds: 60),
+        receiveTimeout: const Duration(seconds: 60),
         headers: {'Content-Type': 'application/json'},
       ),
     );
@@ -44,14 +45,22 @@ class _AuthInterceptor extends Interceptor {
   Future<void> onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     String token = AppConfig.devToken;
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final savedToken = prefs.getString(AppConstants.keyAuthToken);
-      if (savedToken != null && savedToken.isNotEmpty) {
-        token = savedToken;
+      final currentUser = FirebaseAuth.instance.currentUser;
+      if (currentUser != null) {
+        final freshToken = await currentUser.getIdToken();
+        if (freshToken != null && freshToken.isNotEmpty) {
+          token = freshToken;
+        }
+      } else {
+        final prefs = await SharedPreferences.getInstance();
+        final savedToken = prefs.getString(AppConstants.keyAuthToken);
+        if (savedToken != null && savedToken.isNotEmpty) {
+          token = savedToken;
+        }
       }
     } catch (_) {}
     
-    options.headers['Authorization'] = 'Bearer \$token';
+    options.headers['Authorization'] = 'Bearer $token';
     handler.next(options);
   }
 }

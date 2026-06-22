@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/scan_result_model.dart';
 import '../repositories/scan_repository.dart';
 import 'auth_provider.dart';
+import '../services/firestore_service.dart';
 
 abstract class ScanState {}
 class ScanInitial extends ScanState {}
@@ -52,6 +53,15 @@ class ScanNotifier extends StateNotifier<ScanState> {
       (scanResult) => ScanSuccess(scanResult),
     );
   }
+
+  Future<void> scanVideo(File file) async {
+    state = ScanLoading();
+    final result = await _repository.scanVideo(file, _userId);
+    state = result.fold(
+      (failure) => ScanError(failure.message),
+      (scanResult) => ScanSuccess(scanResult),
+    );
+  }
 }
 
 final scanNotifierProvider = StateNotifierProvider<ScanNotifier, ScanState>((ref) {
@@ -62,13 +72,13 @@ final scanNotifierProvider = StateNotifierProvider<ScanNotifier, ScanState>((ref
   );
 });
 
-final scanHistoryProvider = FutureProvider<List<ScanResultModel>>((ref) async {
+final scanHistoryProvider = StreamProvider<List<ScanResultModel>>((ref) {
   final user = ref.watch(authStateProvider).value;
-  if (user == null) return [];
+  if (user == null) return Stream.value([]);
   
-  final result = await ref.watch(scanRepositoryProvider).getScanHistory(user.uid);
-  return result.fold(
-    (failure) => [],
-    (history) => history,
-  );
+  return ref.watch(firestoreServiceProvider).watchScanHistory(user.uid);
+});
+
+final scamAlertsStreamProvider = StreamProvider<List<Map<String, dynamic>>>((ref) {
+  return ref.watch(firestoreServiceProvider).watchGlobalScamAlerts();
 });

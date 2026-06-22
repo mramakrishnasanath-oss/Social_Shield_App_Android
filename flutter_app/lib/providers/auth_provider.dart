@@ -2,20 +2,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/user_model.dart';
 import '../repositories/auth_repository.dart';
+import '../services/firestore_service.dart';
 
 final authStateProvider = StreamProvider<User?>((ref) {
   return ref.watch(authRepositoryProvider).authStateChanges;
 });
 
-final userProfileProvider = FutureProvider<UserModel?>((ref) async {
+final userProfileProvider = StreamProvider<UserModel?>((ref) {
   final user = ref.watch(authStateProvider).value;
-  if (user == null) return null;
+  if (user == null) return Stream.value(null);
   
-  final result = await ref.watch(authRepositoryProvider).getUserProfile(user.uid);
-  return result.fold(
-    (failure) => null, // Handle error appropriately in UI
-    (profile) => profile,
-  );
+  return ref.watch(firestoreServiceProvider).watchUserProfile(user.uid);
 });
 
 class AuthState {

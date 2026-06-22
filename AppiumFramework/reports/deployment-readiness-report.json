@@ -1,19 +1,19 @@
 {
   "totalTests": 170,
-  "passed": 168,
-  "failed": 2,
-  "skipped": 0,
+  "passed": 2,
+  "failed": 83,
+  "skipped": 85,
   "coveragePercent": 100.0,
-  "defectCount": 2,
-  "criticalDefects": 0,
-  "majorDefects": 1,
-  "minorDefects": 1,
+  "defectCount": 83,
+  "criticalDefects": 14,
+  "majorDefects": 15,
+  "minorDefects": 54,
   "scores": {
-    "functional": 96.0,
-    "validation": 100.0,
-    "ui": 96.0,
+    "functional": 0.0,
+    "validation": 0.0,
+    "ui": 0.0,
     "security": 100.0,
     "performance": 100.0
   },
-  "verdict": "READY FOR PRODUCTION"
+  "verdict": "NOT READY FOR PRODUCTION"
 }

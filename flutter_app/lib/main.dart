@@ -10,11 +10,13 @@ void main() async {
   // Ensure Flutter bindings are initialized
   WidgetsFlutterBinding.ensureInitialized();
 
+  bool firebaseReady = false;
   // Initialize Firebase (Requires google-services.json / GoogleService-Info.plist)
   try {
     await Firebase.initializeApp();
+    firebaseReady = true;
   } catch (e) {
-    debugPrint('Firebase initialization failed (might be missing config files): \$e');
+    debugPrint('Firebase initialization failed (might be missing config files): $e');
   }
 
   // Initialize SharedPreferences
@@ -23,6 +25,10 @@ void main() async {
   // Initialize Local Notifications
   final notificationService = NotificationService();
   await notificationService.initialize();
+  
+  if (firebaseReady) {
+    notificationService.initScamAlertsListener();
+  }
 
   // Run the app wrapped in ProviderScope for Riverpod
   runApp(

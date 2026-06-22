@@ -59,9 +59,22 @@ class FirestoreService {
           'threatsDetected': FieldValue.increment(1),
       });
       
+      // If it is fake, add to global scam alerts
+      if (scanResult.isFake || scanResult.isSuspicious) {
+        await _firestore.collection('scam_alerts').doc(scanResult.scanId).set({
+          'id': scanResult.scanId,
+          'title': '⚠ Scam Alert',
+          'body': 'A suspicious profile or content (${scanResult.mediaType}) has been detected by the community.',
+          'type': scanResult.mediaType,
+          'severity': scanResult.riskLevel,
+          'timestamp': scanResult.timestamp.toIso8601String(),
+          'confidence': scanResult.confidence,
+        });
+      }
+      
       return const Right(null);
     } catch (e) {
-      return Left(ServerFailure('Failed to save scan result: \$e'));
+      return Left(ServerFailure('Failed to save scan result: $e'));
     }
   }
 
@@ -78,8 +91,43 @@ class FirestoreService {
       final scans = snapshot.docs.map((doc) => ScanResultModel.fromJson(doc.data())).toList();
       return Right(scans);
     } catch (e) {
-      return Left(ServerFailure('Failed to fetch scan history: \$e'));
+      return Left(ServerFailure('Failed to fetch scan history: $e'));
     }
+  }
+
+  // Real-time Streams
+  Stream<UserModel?> watchUserProfile(String uid) {
+    return _firestore
+        .collection('users')
+        .doc(uid)
+        .snapshots()
+        .map((snapshot) {
+          if (!snapshot.exists || snapshot.data() == null) return null;
+          return UserModel.fromJson(snapshot.data()!);
+        });
+  }
+
+  Stream<List<ScanResultModel>> watchScanHistory(String uid) {
+    return _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('scans')
+        .orderBy('timestamp', descending: true)
+        .snapshots()
+        .map((snapshot) {
+          return snapshot.docs.map((doc) => ScanResultModel.fromJson(doc.data())).toList();
+        });
+  }
+
+  Stream<List<Map<String, dynamic>>> watchGlobalScamAlerts() {
+    return _firestore
+        .collection('scam_alerts')
+        .orderBy('timestamp', descending: true)
+        .limit(30)
+        .snapshots()
+        .map((snapshot) {
+          return snapshot.docs.map((doc) => doc.data()).toList();
+        });
   }
 }
 

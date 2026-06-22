@@ -29,14 +29,23 @@ class ScanResultModel {
   });
 
   factory ScanResultModel.fromJson(Map<String, dynamic> json) {
+    double fakeProb = (json['fake_probability'] as num?)?.toDouble() ?? 0.0;
+    double realProb = (json['real_probability'] as num?)?.toDouble() ?? 0.0;
+
+    // Auto-normalize fractions <= 1.0 to percentage (0-100%)
+    if (fakeProb <= 1.0 && realProb <= 1.0 && (fakeProb > 0.0 || realProb > 0.0)) {
+      fakeProb *= 100.0;
+      realProb *= 100.0;
+    }
+
     return ScanResultModel(
       scanId: json['scan_id'] as String? ?? '',
       userId: json['user_id'] as String? ?? '',
       mediaType: json['media_type'] as String? ?? 'UNKNOWN',
       verdict: json['verdict'] as String? ?? 'UNKNOWN',
       confidence: (json['confidence'] as num?)?.toDouble() ?? 0.0,
-      fakeProbability: (json['fake_probability'] as num?)?.toDouble() ?? 0.0,
-      realProbability: (json['real_probability'] as num?)?.toDouble() ?? 0.0,
+      fakeProbability: fakeProb,
+      realProbability: realProb,
       riskLevel: json['risk_level'] as String? ?? 'LOW',
       explanations: (json['explanations'] as List<dynamic>?)?.map((e) => e as String).toList() ?? [],
       metadata: json['metadata'] as Map<String, dynamic>?,
@@ -64,7 +73,8 @@ class ScanResultModel {
 
   bool get isFake => verdict.toUpperCase() == 'FAKE';
   bool get isSuspicious => verdict.toUpperCase() == 'SUSPICIOUS';
-  bool get isReal => verdict.toUpperCase() == 'REAL';
+  bool get isReal => verdict.toUpperCase() == 'REAL' || verdict.toUpperCase() == 'SAFE';
+  bool get isSafe => isReal;
 
   Color get verdictColor {
     if (isFake) return AppColors.riskHigh;

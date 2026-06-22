@@ -92,8 +92,8 @@ public class HistoryTests extends BaseTest {
     @Test(priority = 12, description = "TC067: History Scroll Performance Check")
     public void tc067_verifyScrollPerformance() {
         logger.info("Executing TC067");
-        scrollDown();
-        scrollUp();
+        historyPage.scrollDown();
+        historyPage.scrollUp();
         Assert.assertTrue(historyPage.isHistoryScreenDisplayed());
     }
 

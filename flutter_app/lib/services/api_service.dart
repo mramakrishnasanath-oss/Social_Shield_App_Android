@@ -17,7 +17,7 @@ class ApiService {
   Future<Either<Failure, ScanResultModel>> scanImage(File file) async {
     try {
       final formData = FormData.fromMap({
-        'file': await MultipartFile.fromFile(file.path, filename: file.path.split('/').last),
+        'file': await MultipartFile.fromFile(file.path, filename: file.path.split(RegExp(r'[/\\]')).last),
       });
 
       final response = await _dioClient.postFormData(AppConfig.endpointScanImage, formData);
@@ -25,7 +25,22 @@ class ApiService {
     } on DioException catch (e) {
       return Left(ServerFailure(e.error.toString()));
     } catch (e) {
-      return Left(ServerFailure('An unexpected error occurred: \$e'));
+      return Left(ServerFailure('An unexpected error occurred: $e'));
+    }
+  }
+
+  Future<Either<Failure, ScanResultModel>> scanVideo(File file) async {
+    try {
+      final formData = FormData.fromMap({
+        'file': await MultipartFile.fromFile(file.path, filename: file.path.split(RegExp(r'[/\\]')).last),
+      });
+
+      final response = await _dioClient.postFormData(AppConfig.endpointScanVideo, formData);
+      return Right(ScanResultModel.fromJson(response.data));
+    } on DioException catch (e) {
+      return Left(ServerFailure(e.error.toString()));
+    } catch (e) {
+      return Left(ServerFailure('An unexpected error occurred: $e'));
     }
   }
 

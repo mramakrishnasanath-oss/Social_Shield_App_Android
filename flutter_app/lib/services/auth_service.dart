@@ -57,10 +57,18 @@ class AuthService {
     try {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
-        return const Left(AuthFailure('Google sign in cancelled.'));
+        return const Left(AuthFailure('Google Sign-In was cancelled.'));
       }
 
       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      
+      if (googleAuth.idToken == null && googleAuth.accessToken == null) {
+        return const Left(AuthFailure(
+          'Google authentication failed: Missing ID or Access Token. '
+          'Please ensure that your Android SHA-1 fingerprint is registered in the Firebase Console.'
+        ));
+      }
+
       final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
@@ -73,6 +81,12 @@ class AuthService {
       }
       return const Left(AuthFailure('Google sign in failed.'));
     } on FirebaseAuthException catch (e) {
+      if (e.code == 'wrong-credentials' || e.code == 'invalid-credential') {
+        return const Left(AuthFailure(
+          'Firebase Auth credential error. '
+          'Please verify that Google Sign-In is enabled in the Firebase Console and your SHA-1 is correct.'
+        ));
+      }
       return Left(AuthFailure(_getAuthExceptionMessage(e)));
     } catch (e) {
       return Left(AuthFailure('An unexpected error occurred: \$e'));

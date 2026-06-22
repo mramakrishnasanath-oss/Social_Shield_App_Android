@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/validators.dart';
 import '../../../core/utils/extensions.dart';
 import '../../../providers/auth_provider.dart';
+import '../../../services/localization_service.dart';
 import '../../widgets/common/glass_card.dart';
 import '../../widgets/common/neon_button.dart';
 
@@ -61,6 +63,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authNotifierProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       body: SafeArea(
@@ -70,21 +73,32 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Logo
-                const Icon(
-                  Icons.shield,
-                  size: 64,
-                  color: AppColors.neonBlue,
+                // Premium Brand Logo Asset
+                Image.asset(
+                  'assets/images/app_logo.png',
+                  height: 100,
+                  width: 100,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Icon(
+                      Icons.shield,
+                      size: 80,
+                      color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                    );
+                  },
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'Welcome Back',
-                  style: Theme.of(context).textTheme.headlineMedium,
+                  Trans.of(context, 'login'),
+                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   'Sign in to continue protecting your digital life',
-                  style: Theme.of(context).textTheme.bodyMedium,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 32),
@@ -99,9 +113,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         TextFormField(
                           controller: _emailController,
                           keyboardType: TextInputType.emailAddress,
-                          decoration: const InputDecoration(
-                            labelText: 'Email',
-                            prefixIcon: Icon(Icons.email_outlined),
+                          decoration: InputDecoration(
+                            labelText: Trans.of(context, 'email'),
+                            prefixIcon: const Icon(Icons.email_outlined),
                           ),
                           validator: Validators.email,
                         ),
@@ -110,12 +124,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           controller: _passwordController,
                           obscureText: _obscurePassword,
                           decoration: InputDecoration(
-                            labelText: 'Password',
+                            labelText: Trans.of(context, 'password'),
                             prefixIcon: const Icon(Icons.lock_outline),
                             suffixIcon: IconButton(
                               icon: Icon(
                                 _obscurePassword ? Icons.visibility_off : Icons.visibility,
-                                color: AppColors.textSecondary,
+                                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                               ),
                               onPressed: () {
                                 setState(() {
@@ -131,15 +145,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           alignment: Alignment.centerRight,
                           child: TextButton(
                             onPressed: () => context.push('/auth/forgot-password'),
-                            child: const Text(
-                              'Forgot Password?',
-                              style: TextStyle(color: AppColors.neonBlue),
+                            child: Text(
+                              Trans.of(context, 'forgot_password'),
+                              style: TextStyle(
+                                color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                                fontWeight: FontWeight.w600
+                              ),
                             ),
                           ),
                         ),
                         const SizedBox(height: 16),
                         NeonButton(
-                          text: 'Sign In',
+                          text: Trans.of(context, 'login'),
                           isLoading: authState.isLoading,
                           onPressed: _login,
                         ),
@@ -156,7 +173,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ),
                         const SizedBox(height: 24),
                         NeonButton(
-                          text: 'Continue with Google',
+                          text: Trans.of(context, 'google_signin'),
                           isSecondary: true,
                           icon: Icons.g_mobiledata,
                           isLoading: authState.isLoading,
@@ -170,12 +187,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('Don\\'t have an account?', style: Theme.of(context).textTheme.bodyMedium),
+                    Text(
+                      "Don't have an account?", 
+                      style: TextStyle(
+                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary
+                      )
+                    ),
                     TextButton(
                       onPressed: () => context.push('/auth/register'),
-                      child: const Text(
-                        'Sign Up',
-                        style: TextStyle(color: AppColors.neonBlue, fontWeight: FontWeight.bold),
+                      child: Text(
+                        Trans.of(context, 'signup'),
+                        style: TextStyle(
+                          color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary, 
+                          fontWeight: FontWeight.bold
+                        ),
                       ),
                     ),
                   ],

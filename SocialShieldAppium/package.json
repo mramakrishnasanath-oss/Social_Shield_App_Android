@@ -1,0 +1,17 @@
+{
+  "name": "socialshield-appium",
+  "version": "1.0.0",
+  "description": "E2E Mobile Appium Testing for SocialShield",
+  "main": "index.js",
+  "scripts": {
+    "test": "wdio run wdio.conf.js"
+  },
+  "dependencies": {
+    "@wdio/cli": "^8.24.0",
+    "@wdio/local-runner": "^8.24.0",
+    "@wdio/mocha-framework": "^8.24.0",
+    "@wdio/spec-reporter": "^8.24.0",
+    "exceljs": "^4.4.0",
+    "webdriverio": "^8.24.0"
+  }
+}

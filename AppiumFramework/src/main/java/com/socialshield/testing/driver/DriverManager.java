@@ -56,7 +56,7 @@ public class DriverManager {
             options.setAppActivity(getProperty("app.activity"));
             
             // Allow auto grant permissions
-            options.setGrantPermissions(true);
+            options.setAutoGrantPermissions(true);
             
             // Ensure noReset is false for complete clean state test unless specific session testing is done
             options.setNoReset(false);
@@ -73,9 +73,36 @@ public class DriverManager {
             
             driverThreadLocal.set(driver);
             logger.info("Appium Android Driver initialized successfully. Session ID: " + driver.getSessionId());
+            
+            dismissSystemPopups(driver);
         } catch (Exception e) {
             logger.error("Error occurred while initializing Android Driver", e);
             throw new RuntimeException("Driver initialization failed", e);
+        }
+    }
+
+    private static void dismissSystemPopups(AndroidDriver driver) {
+        try {
+            logger.info("Checking for any system/compatibility popups at startup...");
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
+            
+            java.util.List<org.openqa.selenium.WebElement> dontShow = driver.findElements(io.appium.java_client.AppiumBy.xpath("//*[@text=\"Don't Show Again\"]"));
+            if (!dontShow.isEmpty() && dontShow.get(0).isDisplayed()) {
+                logger.info("Clicking 'Don't Show Again' to dismiss compatibility dialog permanently.");
+                dontShow.get(0).click();
+            } else {
+                java.util.List<org.openqa.selenium.WebElement> okButtons = driver.findElements(io.appium.java_client.AppiumBy.xpath("//*[@text='OK' or @resource-id='android:id/button1']"));
+                if (!okButtons.isEmpty() && okButtons.get(0).isDisplayed()) {
+                    logger.info("Clicking 'OK' to dismiss compatibility dialog.");
+                    okButtons.get(0).click();
+                }
+            }
+            
+            // Restore original timeout from properties
+            int implicitWait = Integer.parseInt(getProperty("implicit.wait"));
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(implicitWait));
+        } catch (Exception e) {
+            logger.warn("No system dialog found or error while trying to dismiss it: " + e.getMessage());
         }
     }
 
