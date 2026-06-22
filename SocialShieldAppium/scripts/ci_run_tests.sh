@@ -19,6 +19,7 @@ fi
 # 2. Start Appium Server in background
 echo "Starting Appium server on port ${APPIUM_PORT}..."
 npm install -g appium || echo "Appium global installation skipped or already present."
+appium driver install uiautomator2 || echo "UiAutomator2 driver installation skipped or already present."
 appium --log-level warn > /tmp/appium.log 2>&1 &
 APPIUM_PID=$!
 echo "Appium started with PID: ${APPIUM_PID}"
