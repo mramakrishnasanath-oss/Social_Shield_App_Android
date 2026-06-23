@@ -12,10 +12,16 @@ permissions:
 jobs:
   e2e-testing:
     runs-on: self-hosted
+    env:
+      ANDROID_HOME: C:\Users\sanat\AppData\Local\Android\Sdk
+      ANDROID_SDK_ROOT: C:\Users\sanat\AppData\Local\Android\Sdk
     
     steps:
-      - name: Add Git Bash to PATH
-        run: echo C:\Program Files\Git\bin>> "%GITHUB_PATH%"
+      - name: Add Git Bash and Android SDK to PATH
+        run: |
+          echo C:\Program Files\Git\bin>> "%GITHUB_PATH%"
+          echo C:\Users\sanat\AppData\Local\Android\Sdk\emulator>> "%GITHUB_PATH%"
+          echo C:\Users\sanat\AppData\Local\Android\Sdk\platform-tools>> "%GITHUB_PATH%"
         shell: cmd
 
       - name: Checkout Code
@@ -53,19 +59,39 @@ jobs:
           sudo chown $USER /dev/kvm
           echo "KVM setup complete."
 
-      - name: Run E2E Tests on Android Emulator
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 29
-          target: default
-          arch: x86_64
-          profile: Nexus 6
-          force-avd-creation: false
-          emulator-options: -no-window -no-snapshot-load -noaudio -no-boot-anim -camera-back none
-          disable-animations: true
-          script: |
-            chmod +x ./SocialShieldAppium/scripts/ci_run_tests.sh
-            APK_PATH="${{ env.APK_PATH }}" ./SocialShieldAppium/scripts/ci_run_tests.sh
+      - name: Start Android Emulator
+        shell: bash
+        run: |
+          echo "Starting Android Emulator (Pixel_9_Pro)..."
+          emulator -avd Pixel_9_Pro -no-window -no-audio -no-boot-anim > /dev/null 2>&1 &
+          echo "Waiting for emulator to connect..."
+          adb wait-for-device
+          echo "Waiting for emulator to boot completed..."
+          for i in {1..90}; do
+            BOOT_STATUS=$(adb shell getprop sys.boot_completed | tr -d '\r')
+            if [ "$BOOT_STATUS" = "1" ]; then
+              echo "Emulator booted successfully."
+              break
+            fi
+            if [ $i -eq 90 ]; then
+              echo "Timeout waiting for emulator to boot."
+              exit 1
+            fi
+            sleep 2
+          done
+
+      - name: Run E2E Tests
+        shell: bash
+        run: |
+          chmod +x ./SocialShieldAppium/scripts/ci_run_tests.sh
+          APK_PATH="${{ env.APK_PATH }}" ./SocialShieldAppium/scripts/ci_run_tests.sh
+
+      - name: Stop Android Emulator
+        if: always()
+        shell: bash
+        run: |
+          echo "Stopping Android Emulator..."
+          adb emu kill || true
 
       - name: Copy Reports for Archive & History
         if: always()
