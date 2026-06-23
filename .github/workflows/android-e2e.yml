@@ -113,9 +113,56 @@ jobs:
             SocialShieldAppium/reports/execution-report.html
 
       - name: Deploy Test Reports to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
         if: always()
-        with:
-          branch: gh-pages
-          folder: reports/
-          target-folder: reports/
+        shell: bash
+        run: |
+          echo "Deploying reports to gh-pages branch..."
+          
+          # Clean up any leftover worktree or directory from previous failed runs
+          git worktree prune || true
+          rm -rf gh-pages-dir || true
+          
+          # Setup git config
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          REMOTE="origin"
+          
+          # Fetch gh-pages branch
+          git fetch $REMOTE gh-pages || true
+          
+          # Check if branch exists on remote
+          if git show-ref --verify --quiet refs/remotes/$REMOTE/gh-pages; then
+            echo "gh-pages branch found. Checking it out in worktree..."
+            git worktree add -B gh-pages gh-pages-dir $REMOTE/gh-pages
+            # Clean latest report directory to avoid stale files
+            rm -rf gh-pages-dir/reports/latest
+          else
+            echo "gh-pages branch not found. Creating orphan branch..."
+            git worktree add --detach gh-pages-dir
+            cd gh-pages-dir
+            git checkout --orphan gh-pages
+            git rm -rf .
+            cd ..
+          fi
+          
+          # Copy new reports
+          mkdir -p gh-pages-dir/reports
+          cp -r reports/* gh-pages-dir/reports/
+          
+          # Commit and push
+          cd gh-pages-dir
+          git add reports/
+          
+          if git diff --quiet --cached; then
+            echo "No changes to deploy."
+          else
+            git commit -m "Deploy E2E reports: build ${GITHUB_RUN_NUMBER}"
+            git push $REMOTE gh-pages
+          fi
+          
+          # Clean up worktree
+          cd ..
+          git worktree remove --force gh-pages-dir || true
+          rm -rf gh-pages-dir || true
+

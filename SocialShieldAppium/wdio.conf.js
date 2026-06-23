@@ -32,8 +32,8 @@ exports.config = {
     maxInstances: 1,
     capabilities: [{
         platformName: 'Android',
-        'appium:deviceName': 'Nexus_6_API_29',
-        'appium:platformVersion': '10.0',
+        'appium:deviceName': 'Pixel_9_Pro',
+        'appium:platformVersion': '17',
         'appium:automationName': 'UiAutomator2',
         'appium:app': process.env.APK_PATH || path.join(__dirname, '../app-build/SocialShield.apk'),
         'appium:appPackage': 'com.socialshield',
