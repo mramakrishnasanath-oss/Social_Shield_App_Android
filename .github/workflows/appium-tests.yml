@@ -8,13 +8,14 @@ on:
 
 jobs:
   appium-tests:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
     - name: Checkout Source Code
       uses: actions/checkout@v4
 
     - name: Enable KVM group perms
+      if: runner.os == 'Linux'
       run: |
         echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
         sudo udevadm control --reload-rules
@@ -33,15 +34,13 @@ jobs:
         node-version: '20'
 
     - name: Install Appium 2.x and UiAutomator2 Driver
+      shell: bash
       run: |
         npm install -g appium
-        appium driver install uiautomator2
-
-    - name: Start Appium Server
-      run: |
-        nohup appium --port 4723 > /dev/null 2>&1 &
+        appium driver install uiautomator2 || true
 
     - name: Build Android App debug APK
+      shell: bash
       run: |
         cd android
         chmod +x gradlew
@@ -59,10 +58,19 @@ jobs:
         disable-animations: true
         emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
         script: |
+          # Start Appium Server in background
+          appium --port 4723 --log-level warn > /tmp/appium.log 2>&1 &
+          APPIUM_PID=$!
+          
           # Overwrite app.path and platform.version in config.properties to match runner settings
           sed -i "s|app.path=.*|app.path=$GITHUB_WORKSPACE/app-build/SocialShield.apk|g" AppiumFramework/config.properties
           sed -i "s|platform.version=.*|platform.version=11.0|g" AppiumFramework/config.properties
+          
           cd AppiumFramework && mvn clean test
+          TEST_EXIT_CODE=$?
+          
+          kill $APPIUM_PID || true
+          exit $TEST_EXIT_CODE
 
     - name: Upload Test Automation Reports Artifacts
       if: always()
