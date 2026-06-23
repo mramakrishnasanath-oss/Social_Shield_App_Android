@@ -25,6 +25,10 @@ jobs:
     - name: Checkout Source Code
       uses: actions/checkout@v4
 
+    - name: Add local Maven to PATH
+      shell: bash
+      run: echo "$GITHUB_WORKSPACE/apache-maven-3.9.6/bin" >> $GITHUB_PATH
+
     - name: Enable KVM group perms
       if: runner.os == 'Linux'
       run: |
