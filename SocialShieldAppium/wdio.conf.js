@@ -132,7 +132,7 @@ exports.config = {
         }
     },
 
-    onComplete: function(exitCode, config, capabilities, results) {
+    onComplete: async function(exitCode, config, capabilities, results) {
         console.log('Test execution completed. Compiling reports...');
         
         const reportsDir = path.join(__dirname, 'reports');
@@ -140,7 +140,7 @@ exports.config = {
         const htmlPath = path.join(reportsDir, 'execution-report.html');
         
         // 1. Generate Excel Report
-        generateReport(excelPath, RESULTS_FILE);
+        await generateReport(excelPath, RESULTS_FILE);
         
         // 2. Generate HTML Report
         generateHtmlReport(RESULTS_FILE, htmlPath);

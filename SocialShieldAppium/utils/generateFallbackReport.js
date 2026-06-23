@@ -26,12 +26,13 @@ const fallbackRecord = {
 
 fs.writeFileSync(RESULTS_FILE, JSON.stringify(fallbackRecord) + '\n', 'utf8');
 
-startRun();
-recordTest(fallbackRecord);
-generateReport(excelPath, RESULTS_FILE);
-
-generateHtmlReport(RESULTS_FILE, htmlPath);
-
-generateSummary(RESULTS_FILE);
-
-console.log('Fallback reports generated successfully.');
+(async () => {
+    try {
+        await generateReport(excelPath, RESULTS_FILE);
+        generateHtmlReport(RESULTS_FILE, htmlPath);
+        generateSummary(RESULTS_FILE);
+        console.log('Fallback reports generated successfully.');
+    } catch (err) {
+        console.error('Error generating fallback reports:', err);
+    }
+})();

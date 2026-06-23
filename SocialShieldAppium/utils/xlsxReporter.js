@@ -25,7 +25,7 @@ function recordTest(test) {
     });
 }
 
-function generateReport(outputPath, resultsFilePath) {
+async function generateReport(outputPath, resultsFilePath) {
     if (resultsFilePath && fs.existsSync(resultsFilePath)) {
         try {
             const fileContent = fs.readFileSync(resultsFilePath, 'utf-8');
@@ -273,7 +273,7 @@ function generateReport(outputPath, resultsFilePath) {
         fs.mkdirSync(dir, { recursive: true });
     }
     
-    workbook.xlsx.writeFile(outputPath);
+    await workbook.xlsx.writeFile(outputPath);
 }
 
 module.exports = {
