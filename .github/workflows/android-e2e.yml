@@ -22,6 +22,7 @@ jobs:
           echo C:\Program Files\Git\bin>> "%GITHUB_PATH%"
           echo C:\Users\sanat\AppData\Local\Android\Sdk\emulator>> "%GITHUB_PATH%"
           echo C:\Users\sanat\AppData\Local\Android\Sdk\platform-tools>> "%GITHUB_PATH%"
+          "C:\Program Files\Git\bin\git.exe" config --global core.longPaths true
         shell: cmd
 
       - name: Checkout Code
