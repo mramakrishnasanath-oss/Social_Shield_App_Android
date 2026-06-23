@@ -14,6 +14,10 @@ jobs:
     runs-on: self-hosted
     
     steps:
+      - name: Add Git Bash to PATH
+        run: echo "C:\Program Files\Git\bin" >> $env:GITHUB_PATH
+        shell: powershell
+
       - name: Checkout Code
         uses: actions/checkout@v4
 
@@ -31,7 +35,7 @@ jobs:
           cache-dependency-path: 'SocialShieldAppium/package.json'
 
       - name: Build Debug APK
-        shell: bash
+        shell: git-bash
         run: |
           cd android
           chmod +x gradlew
@@ -65,7 +69,7 @@ jobs:
 
       - name: Copy Reports for Archive & History
         if: always()
-        shell: bash
+        shell: git-bash
         run: |
           mkdir -p reports/latest
           mkdir -p reports/history/build-${{ github.run_number }}

@@ -11,6 +11,10 @@ jobs:
     runs-on: self-hosted
 
     steps:
+    - name: Add Git Bash to PATH
+      run: echo "C:\Program Files\Git\bin" >> $env:GITHUB_PATH
+      shell: powershell
+
     - name: Checkout Source Code
       uses: actions/checkout@v4
 
@@ -34,13 +38,13 @@ jobs:
         node-version: '20'
 
     - name: Install Appium 2.x and UiAutomator2 Driver
-      shell: bash
+      shell: git-bash
       run: |
         npm install -g appium
         appium driver install uiautomator2 || true
 
     - name: Build Android App debug APK
-      shell: bash
+      shell: git-bash
       run: |
         cd android
         chmod +x gradlew
