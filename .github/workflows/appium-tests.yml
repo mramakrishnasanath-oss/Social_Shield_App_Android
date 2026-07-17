@@ -25,9 +25,11 @@ jobs:
     - name: Checkout Source Code
       uses: actions/checkout@v4
 
-    - name: Add local Maven to PATH
+    - name: Add local Maven and Global npm to PATH
       shell: bash
-      run: echo "$GITHUB_WORKSPACE/apache-maven-3.9.6/bin" >> $GITHUB_PATH
+      run: |
+        echo "c:/Users/sanat/Downloads/SocialShield/SocialShield/apache-maven-3.9.6/bin" >> $GITHUB_PATH
+        echo "C:\Users\sanat\AppData\Roaming\npm" >> $GITHUB_PATH
 
     - name: Enable KVM group perms
       if: runner.os == 'Linux'
@@ -92,8 +94,11 @@ jobs:
         appium --port 4723 --log-level warn > /tmp/appium.log 2>&1 &
         APPIUM_PID=$!
         
+        # Convert GITHUB_WORKSPACE to forward slashes for sed to prevent backslash escaping issues on Windows
+        WORKSPACE_FORWARD=$(echo "$GITHUB_WORKSPACE" | tr '\\' '/')
+        
         # Overwrite app.path and platform.version in config.properties to match runner settings
-        sed -i "s|app.path=.*|app.path=$GITHUB_WORKSPACE/app-build/SocialShield.apk|g" AppiumFramework/config.properties
+        sed -i "s|app.path=.*|app.path=$WORKSPACE_FORWARD/app-build/SocialShield.apk|g" AppiumFramework/config.properties
         sed -i "s|platform.version=.*|platform.version=17|g" AppiumFramework/config.properties
         
         cd AppiumFramework && mvn clean test
