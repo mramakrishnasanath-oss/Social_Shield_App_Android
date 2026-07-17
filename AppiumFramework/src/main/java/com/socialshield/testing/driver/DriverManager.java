@@ -84,17 +84,41 @@ public class DriverManager {
     private static void dismissSystemPopups(AndroidDriver driver) {
         try {
             logger.info("Checking for any system/compatibility popups at startup...");
-            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(2));
             
-            java.util.List<org.openqa.selenium.WebElement> dontShow = driver.findElements(io.appium.java_client.AppiumBy.xpath("//*[@text=\"Don't Show Again\"]"));
-            if (!dontShow.isEmpty() && dontShow.get(0).isDisplayed()) {
-                logger.info("Clicking 'Don't Show Again' to dismiss compatibility dialog permanently.");
-                dontShow.get(0).click();
-            } else {
+            // Loop up to 3 times to handle chained popups (e.g. System UI isn't responding followed by Compatibility warning)
+            for (int i = 0; i < 3; i++) {
+                boolean popupDismissed = false;
+                
+                // 1. Check for unresponsive dialogs (e.g., "Wait" button)
+                java.util.List<org.openqa.selenium.WebElement> waitButtons = driver.findElements(io.appium.java_client.AppiumBy.xpath("//*[@text='Wait']"));
+                if (!waitButtons.isEmpty() && waitButtons.get(0).isDisplayed()) {
+                    logger.info("Clicking 'Wait' to dismiss unresponsive system dialog.");
+                    waitButtons.get(0).click();
+                    popupDismissed = true;
+                    Thread.sleep(1000);
+                }
+                
+                // 2. Check for Compatibility dialog (Don't Show Again)
+                java.util.List<org.openqa.selenium.WebElement> dontShow = driver.findElements(io.appium.java_client.AppiumBy.xpath("//*[@text=\"Don't Show Again\"]"));
+                if (!dontShow.isEmpty() && dontShow.get(0).isDisplayed()) {
+                    logger.info("Clicking 'Don't Show Again' to dismiss compatibility dialog permanently.");
+                    dontShow.get(0).click();
+                    popupDismissed = true;
+                    Thread.sleep(1000);
+                }
+                
+                // 3. Check for Compatibility dialog (OK)
                 java.util.List<org.openqa.selenium.WebElement> okButtons = driver.findElements(io.appium.java_client.AppiumBy.xpath("//*[@text='OK' or @resource-id='android:id/button1']"));
                 if (!okButtons.isEmpty() && okButtons.get(0).isDisplayed()) {
                     logger.info("Clicking 'OK' to dismiss compatibility dialog.");
                     okButtons.get(0).click();
+                    popupDismissed = true;
+                    Thread.sleep(1000);
+                }
+                
+                if (!popupDismissed) {
+                    break; // No popups found in this iteration
                 }
             }
             
