@@ -64,7 +64,8 @@ jobs:
         shell: bash
         run: |
           echo "Starting Android Emulator (Pixel_9_Pro)..."
-          emulator -avd Pixel_9_Pro -no-window -no-audio -no-boot-anim > /dev/null 2>&1 &
+          emulator -avd Pixel_9_Pro -no-window -no-audio -no-boot-anim -no-snapshot-load \
+            -memory 2048 -cores 2 > /dev/null 2>&1 &
           echo "Waiting for emulator to connect..."
           adb wait-for-device
           echo "Waiting for emulator to boot completed..."
@@ -80,6 +81,34 @@ jobs:
             fi
             sleep 2
           done
+
+      - name: Dismiss Blocking Dialogs Post-Boot
+        shell: bash
+        run: |
+          echo "Dismissing any post-boot dialogs (System UI ANR, 16KB compat, etc.)..."
+          ADB="${ANDROID_HOME}/platform-tools/adb"
+          # Wait a few seconds for dialogs to appear
+          sleep 5
+          # Dismiss dialogs: press BACK, HOME, and tap OK positions multiple times
+          for round in {1..3}; do
+            echo "  [round $round] Pressing BACK/HOME and tapping dialog buttons..."
+            $ADB shell input keyevent 4  2>/dev/null || true
+            sleep 0.5
+            $ADB shell input keyevent 4  2>/dev/null || true
+            sleep 0.5
+            $ADB shell input keyevent 3  2>/dev/null || true
+            sleep 0.5
+            # Tap "OK" / "Close" at typical dialog positions for 1080p screen
+            $ADB shell input tap 540 1400 2>/dev/null || true
+            sleep 0.3
+            $ADB shell input tap 540 1600 2>/dev/null || true
+            sleep 0.3
+            # Also tap "Wait" in ANR dialog (usually bottom-left button)
+            $ADB shell input tap 200 1400 2>/dev/null || true
+            sleep 0.3
+            sleep 2
+          done
+          echo "Dialog dismissal complete."
 
       - name: Run E2E Tests
         shell: bash
@@ -102,6 +131,10 @@ jobs:
           mkdir -p reports/history/build-${{ github.run_number }}
           cp -r SocialShieldAppium/reports/* reports/latest/ || true
           cp -r SocialShieldAppium/reports/* reports/history/build-${{ github.run_number }}/ || true
+          
+          # Copy to host machine local workspace for the user to view locally
+          mkdir -p /c/Users/sanat/Downloads/SocialShield/SocialShield/SocialShieldAppium/reports/
+          cp -r SocialShieldAppium/reports/* /c/Users/sanat/Downloads/SocialShield/SocialShield/SocialShieldAppium/reports/ || true
 
       - name: Upload Test Artifacts (Excel & HTML)
         uses: actions/upload-artifact@v4

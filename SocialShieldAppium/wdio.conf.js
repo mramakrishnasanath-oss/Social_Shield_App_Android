@@ -32,15 +32,21 @@ exports.config = {
     maxInstances: 1,
     capabilities: [{
         platformName: 'Android',
-        'appium:deviceName': 'Pixel_9_Pro',
-        'appium:platformVersion': '17',
+        'appium:deviceName': 'emulator-5554',
+        'appium:platformVersion': '14',
         'appium:automationName': 'UiAutomator2',
         'appium:app': process.env.APK_PATH || path.join(__dirname, '../app-build/SocialShield.apk'),
         'appium:appPackage': 'com.socialshield',
         'appium:appActivity': 'com.socialshield.MainActivity',
-        'appium:noReset': false,
+        'appium:noReset': true,
         'appium:fullReset': false,
-        'appium:newCommandTimeout': 240
+        'appium:autoLaunch': true,
+        'appium:dontStopAppOnReset': true,
+        'appium:autoGrantPermissions': true,
+        'appium:skipDeviceInitialization': false,
+        'appium:newCommandTimeout': 300,
+        'appium:uiautomator2ServerInstallTimeout': 60000,
+        'appium:adbExecTimeout': 60000
     }],
     
     //
