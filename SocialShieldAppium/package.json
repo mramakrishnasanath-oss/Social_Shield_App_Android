@@ -4,7 +4,8 @@
   "description": "E2E Mobile Appium Testing for SocialShield",
   "main": "index.js",
   "scripts": {
-    "test": "wdio run wdio.conf.js"
+    "test": "wdio run wdio.conf.js",
+    "test:standalone": "node scripts/standalone_runner.js"
   },
   "dependencies": {
     "@wdio/cli": "^8.24.0",
@@ -12,6 +13,7 @@
     "@wdio/mocha-framework": "^8.24.0",
     "@wdio/spec-reporter": "^8.24.0",
     "exceljs": "^4.4.0",
+    "mocha": "^10.4.0",
     "webdriverio": "^8.24.0"
   }
 }
