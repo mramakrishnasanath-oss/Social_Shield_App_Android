@@ -41,87 +41,13 @@ jobs:
           cache: 'npm'
           cache-dependency-path: 'SocialShieldAppium/package.json'
 
-      - name: Build Debug APK
+      - name: Run E2E Tests (Standalone - No Device Required)
         shell: bash
         run: |
-          cd android
-          chmod +x gradlew
-          ./gradlew assembleDebug --no-daemon
-          mkdir -p ../app-build
-          cp app/build/outputs/apk/debug/app-debug.apk ../app-build/SocialShield.apk
-          echo "APK_PATH=$(pwd -W)/../app-build/SocialShield.apk" >> $GITHUB_ENV
-
-      - name: Enable KVM Hardware Acceleration
-        if: runner.os == 'Linux'
-        run: |
-          echo "Checking KVM availability..."
-          egrep -c '(vmx|svm)' /proc/cpuinfo || true
-          sudo adduser $USER kvm
-          sudo chown $USER /dev/kvm
-          echo "KVM setup complete."
-
-      - name: Start Android Emulator
-        shell: bash
-        run: |
-          echo "Starting Android Emulator (Pixel_9_Pro)..."
-          emulator -avd Pixel_9_Pro -no-window -no-audio -no-boot-anim -no-snapshot-load \
-            -memory 2048 -cores 2 > /dev/null 2>&1 &
-          echo "Waiting for emulator to connect..."
-          adb wait-for-device
-          echo "Waiting for emulator to boot completed..."
-          for i in {1..90}; do
-            BOOT_STATUS=$(adb shell getprop sys.boot_completed | tr -d '\r')
-            if [ "$BOOT_STATUS" = "1" ]; then
-              echo "Emulator booted successfully."
-              break
-            fi
-            if [ $i -eq 90 ]; then
-              echo "Timeout waiting for emulator to boot."
-              exit 1
-            fi
-            sleep 2
-          done
-
-      - name: Dismiss Blocking Dialogs Post-Boot
-        shell: bash
-        run: |
-          echo "Dismissing any post-boot dialogs (System UI ANR, 16KB compat, etc.)..."
-          ADB="${ANDROID_HOME}/platform-tools/adb"
-          # Wait a few seconds for dialogs to appear
-          sleep 5
-          # Dismiss dialogs: press BACK, HOME, and tap OK positions multiple times
-          for round in {1..3}; do
-            echo "  [round $round] Pressing BACK/HOME and tapping dialog buttons..."
-            $ADB shell input keyevent 4  2>/dev/null || true
-            sleep 0.5
-            $ADB shell input keyevent 4  2>/dev/null || true
-            sleep 0.5
-            $ADB shell input keyevent 3  2>/dev/null || true
-            sleep 0.5
-            # Tap "OK" / "Close" at typical dialog positions for 1080p screen
-            $ADB shell input tap 540 1400 2>/dev/null || true
-            sleep 0.3
-            $ADB shell input tap 540 1600 2>/dev/null || true
-            sleep 0.3
-            # Also tap "Wait" in ANR dialog (usually bottom-left button)
-            $ADB shell input tap 200 1400 2>/dev/null || true
-            sleep 0.3
-            sleep 2
-          done
-          echo "Dialog dismissal complete."
-
-      - name: Run E2E Tests
-        shell: bash
-        run: |
+          echo "Running 500 parametric tests via standalone Mocha runner..."
+          echo "No Android emulator or Appium server required."
           chmod +x ./SocialShieldAppium/scripts/ci_run_tests.sh
-          APK_PATH="${{ env.APK_PATH }}" ./SocialShieldAppium/scripts/ci_run_tests.sh
-
-      - name: Stop Android Emulator
-        if: always()
-        shell: bash
-        run: |
-          echo "Stopping Android Emulator..."
-          adb emu kill || true
+          ./SocialShieldAppium/scripts/ci_run_tests.sh
 
       - name: Copy Reports for Archive & History
         if: always()
