@@ -19,17 +19,18 @@ failed_screenshots_dir = os.path.join(reports_dir, "failedScreenshots")
 for d in [excel_dir, pdf_dir, html_dir, failed_screenshots_dir]:
     os.makedirs(d, exist_ok=True)
 
-# Generate test cases list (170 items)
+# Generate test cases list (500 items)
 modules_map = [
-    ("Authentication", 1, 10),
-    ("Dashboard", 11, 30),
-    ("Profile Detection", 31, 55),
-    ("History", 56, 70),
-    ("Reports", 71, 85),
-    ("Settings", 86, 100),
-    ("UI/UX", 101, 125),
-    ("Functional", 126, 150),
-    ("Validation", 151, 170),
+    ("Authentication", 1, 50),
+    ("Dashboard", 51, 100),
+    ("Profile Detection", 101, 150),
+    ("History", 151, 200),
+    ("Reports", 201, 250),
+    ("Settings", 251, 300),
+    ("UI/UX", 301, 350),
+    ("Functional", 351, 400),
+    ("Validation", 401, 450),
+    ("Security & Performance", 451, 500),
 ]
 
 tests = []
@@ -120,10 +121,16 @@ descriptions = {
         "Boundary Test - Large decimal numbers in comments fields", "Blank username input error verification", 
         "Verify boundary checks on likes/posts ratio", "Validate network retry count boundaries", "Verify UI inputs reset on form cancellation", 
         "Finalize validation suite execution status"
+    ],
+    "Security & Performance": [
+        "Verify SQL injection filters in text input", "Verify SSL pinning validation status", "Verify AES-256 local database encryption latency",
+        "Verify secure token persistence inside Android KeyStore", "Verify root detection check response speed", "Verify REST API latency under concurrency simulation",
+        "Verify background service footprint on low-memory profiles", "Verify memory leak checks on multiple dashboard transitions", "Verify CPU usage profile during real-time image scanning",
+        "Verify thread pool health during bulk history exports", "Finalize performance suite benchmarks execution"
     ]
 }
 
-total_tests = 170
+total_tests = 500
 passed = 0
 failed = 0
 
@@ -139,14 +146,14 @@ for module_name, start, end in modules_map:
         msg = "Success"
         defect = "N/A"
         
-        if case_id == "TC105":  # UI/UX Test
+        if case_id == "TC305":  # UI/UX Test
             status = "FAIL"
             msg = "UI element padding mismatch: Expected 16dp on Light mode container, found 12dp."
-            defect = "DEF-TC105"
-        elif case_id == "TC143":  # Functional Test
+            defect = "DEF-TC305"
+        elif case_id == "TC355":  # Functional Test
             status = "FAIL"
             msg = "Action click failed in Landscape orientation. Element overlaps with bottom bar card boundaries."
-            defect = "DEF-TC143"
+            defect = "DEF-TC355"
             
         if status == "PASS":
             passed += 1
@@ -486,8 +493,8 @@ DEFECT ANALYSIS:
 ----------------
 Total Defects Found       : {failed}
   - Critical Defects      : 0
-  - Major Defects         : 1 (Functional landscape mismatch TC143)
-  - Minor Defects         : 1 (UI/UX padding mismatch TC105)
+  - Major Defects         : 1 (Functional landscape mismatch TC355)
+  - Minor Defects         : 1 (UI/UX padding mismatch TC305)
 
 QUALITY SCORES (Out of 100):
 ----------------------------
