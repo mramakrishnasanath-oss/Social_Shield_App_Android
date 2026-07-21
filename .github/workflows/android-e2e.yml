@@ -46,8 +46,8 @@ jobs:
         run: |
           echo "Running 500 parametric tests via standalone Mocha runner..."
           echo "No Android emulator or Appium server required."
-          chmod +x ./SocialShieldAppium/scripts/ci_run_tests.sh
-          ./SocialShieldAppium/scripts/ci_run_tests.sh
+          cd SocialShieldAppium
+          node scripts/standalone_runner.js
 
       - name: Copy Reports for Archive & History
         if: always()
