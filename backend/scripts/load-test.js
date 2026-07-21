@@ -1,3 +1,4 @@
+// SocialShield k6 Load Test Suite
 import http from 'k6/http';
 import { check, sleep } from 'k6';
 
