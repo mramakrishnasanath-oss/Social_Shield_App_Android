@@ -1,7 +1,8 @@
 // ─── Settings Page ────────────────────────────────────────────────────────────
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
+import { clearHistory } from '../api';
 
 function Toggle({ id, checked, onChange }) {
   return (
@@ -36,21 +37,58 @@ function Row({ label, desc, right }) {
 }
 
 export default function SettingsPage() {
-  const { user, logout } = useAuth();
+  const { user, logout, updateUser } = useAuth();
   const navigate = useNavigate();
 
-  const [prefs, setPrefs] = useState({
-    darkMode:       true,
-    notifications:  true,
-    autoScan:       false,
-    saveHistory:    true,
-    highQuality:    false,
-    betaFeatures:   false,
+  const [prefs, setPrefs] = useState(() => {
+    const stored = localStorage.getItem('ss_prefs');
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        document.body.classList.toggle('light-mode', !parsed.darkMode);
+        return parsed;
+      } catch {}
+    }
+    return {
+      darkMode:       true,
+      notifications:  true,
+      autoScan:       false,
+      saveHistory:    true,
+      highQuality:    false,
+      betaFeatures:   false,
+    };
   });
 
-  const toggle = (key) => setPrefs((p) => ({ ...p, [key]: !p[key] }));
+  const [editing, setEditing] = useState(false);
+  const [newName, setNewName] = useState(user?.displayName || '');
+  const [clearing, setClearing] = useState(false);
+
+  const toggle = (key) => {
+    setPrefs((p) => {
+      const next = { ...p, [key]: !p[key] };
+      if (key === 'darkMode') {
+        document.body.classList.toggle('light-mode', !next.darkMode);
+      }
+      localStorage.setItem('ss_prefs', JSON.stringify(next));
+      return next;
+    });
+  };
 
   const handleLogout = () => { logout(); navigate('/auth'); };
+
+  const handleClearHistory = async () => {
+    if (window.confirm("Are you sure you want to permanently clear all scan history?")) {
+      setClearing(true);
+      try {
+        await clearHistory();
+        alert("Scan history cleared successfully!");
+      } catch (err) {
+        alert("Failed to clear history on backend. Cleared locally.");
+      } finally {
+        setClearing(false);
+      }
+    }
+  };
 
   const MODELS = [
     { name: 'EfficientNet-B4', purpose: 'Image Deepfake', acc: '95%', color: '#00D4FF' },
@@ -73,15 +111,54 @@ export default function SettingsPage() {
             👤
           </div>
           <div style={{ flex:1, minWidth:0 }}>
-            <div style={{ fontWeight:700, fontSize:16 }}>{user?.displayName || 'Shield User'}</div>
-            <div style={{ color:'rgba(255,255,255,0.45)', fontSize:13, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{user?.email}</div>
-            <div style={{ marginTop:4 }}>
-              <span style={{ fontSize:11, background:'rgba(0,212,255,0.15)', border:'1px solid rgba(0,212,255,0.3)', color:'var(--neon-blue)', padding:'2px 10px', borderRadius:20, fontWeight:600 }}>
-                Pro Plan
-              </span>
-            </div>
+            {editing ? (
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                <input
+                  type="text"
+                  className="input-field"
+                  style={{ height: 32, fontSize: 14, padding: '0 8px', maxWidth: 160 }}
+                  value={newName}
+                  onChange={(e) => setNewName(e.target.value)}
+                />
+                <button
+                  className="btn-neon"
+                  style={{ height: 32, padding: '0 12px', fontSize: 12 }}
+                  onClick={async () => {
+                    await updateUser({ displayName: newName });
+                    setEditing(false);
+                  }}
+                >
+                  Save
+                </button>
+                <button
+                  className="btn-neon btn-outline"
+                  style={{ height: 32, padding: '0 12px', fontSize: 12 }}
+                  onClick={() => { setEditing(false); setNewName(user?.displayName || ''); }}
+                >
+                  Cancel
+                </button>
+              </div>
+            ) : (
+              <>
+                <div style={{ fontWeight:700, fontSize:16 }}>{user?.displayName || 'Shield User'}</div>
+                <div style={{ color:'rgba(255,255,255,0.45)', fontSize:13, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{user?.email}</div>
+                <div style={{ marginTop:4 }}>
+                  <span style={{ fontSize:11, background:'rgba(0,212,255,0.15)', border:'1px solid rgba(0,212,255,0.3)', color:'var(--neon-blue)', padding:'2px 10px', borderRadius:20, fontWeight:600 }}>
+                    Pro Plan
+                  </span>
+                </div>
+              </>
+            )}
           </div>
-          <button className="btn-neon btn-outline" style={{ height:36, padding:'0 16px', fontSize:13, flexShrink:0 }}>Edit</button>
+          {!editing && (
+            <button
+              className="btn-neon btn-outline"
+              style={{ height:36, padding:'0 16px', fontSize:13, flexShrink:0 }}
+              onClick={() => { setEditing(true); setNewName(user?.displayName || ''); }}
+            >
+              Edit
+            </button>
+          )}
         </div>
 
         {/* Preferences */}
@@ -134,8 +211,13 @@ export default function SettingsPage() {
             Danger Zone
           </h3>
           <div style={{ display:'flex', gap:12, flexWrap:'wrap' }}>
-            <button className="btn-neon" style={{ background:'rgba(255,59,59,0.12)', color:'var(--risk-high)', border:'1px solid rgba(255,59,59,0.3)', boxShadow:'none', height:40, fontSize:13 }}>
-              🗑️ Clear History
+            <button
+              className="btn-neon"
+              style={{ background:'rgba(255,59,59,0.12)', color:'var(--risk-high)', border:'1px solid rgba(255,59,59,0.3)', boxShadow:'none', height:40, fontSize:13 }}
+              onClick={handleClearHistory}
+              disabled={clearing}
+            >
+              {clearing ? 'Clearing…' : '🗑️ Clear History'}
             </button>
             <button id="logout-btn" className="btn-neon" style={{ background:'rgba(255,59,59,0.12)', color:'var(--risk-high)', border:'1px solid rgba(255,59,59,0.3)', boxShadow:'none', height:40, fontSize:13 }} onClick={handleLogout}>
               🚪 Sign Out

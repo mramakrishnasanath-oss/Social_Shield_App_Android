@@ -42,6 +42,71 @@
   --font-display: 'Space Grotesk', sans-serif;
 }
 
+body.light-mode {
+  --deep-black:   #f4f6fc;
+  --dark-surface: #ffffff;
+  --dark-card:    #e8edf7;
+  --dark-elevated:#dae3f3;
+  --glass-white:  rgba(0, 0, 0, 0.04);
+  --glass-border: rgba(0, 0, 0, 0.08);
+  background: var(--deep-black) !important;
+  color: #15152a !important;
+}
+
+body.light-mode h1, 
+body.light-mode h2, 
+body.light-mode h3, 
+body.light-mode h4, 
+body.light-mode p,
+body.light-mode label {
+  color: #101020 !important;
+}
+
+body.light-mode .sidebar {
+  background: #ffffff !important;
+  border-right: 1px solid var(--glass-border) !important;
+}
+
+body.light-mode .sidebar-logo, 
+body.light-mode .nav-item {
+  color: #333344 !important;
+}
+
+body.light-mode .nav-item:hover, 
+body.light-mode .nav-item.active {
+  background: rgba(0, 212, 255, 0.1) !important;
+  color: var(--neon-blue) !important;
+}
+
+body.light-mode .topbar {
+  background: #ffffff !important;
+  border-bottom: 1px solid var(--glass-border) !important;
+}
+
+body.light-mode .input-field {
+  background: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.15) !important;
+  color: #101020 !important;
+}
+
+body.light-mode .input-field::placeholder {
+  color: rgba(0, 0, 0, 0.4) !important;
+}
+
+body.light-mode .btn-neon.btn-outline {
+  border: 1px solid rgba(0, 0, 0, 0.15) !important;
+  color: #101020 !important;
+}
+
+body.light-mode .btn-neon.btn-outline:hover {
+  border-color: var(--neon-blue) !important;
+  color: var(--neon-blue) !important;
+}
+
+body.light-mode .stat-label {
+  color: rgba(0, 0, 0, 0.6) !important;
+}
+
 html, body, #root {
   height: 100%;
   width: 100%;

@@ -83,3 +83,48 @@ async def scan_image_with_hf(image_bytes: bytes) -> dict:
         final_real_prob = 1.0 - final_fake_prob
         
         return {"fake_prob": final_fake_prob, "real_prob": final_real_prob}
+
+
+async def scan_audio_with_hf(audio_bytes: bytes) -> dict:
+    """
+    Calls a Hugging Face Inference API for cloned voice detection.
+    Returns a dict with 'fake_prob' and 'real_prob'.
+    """
+    if not HF_API_KEY:
+        logger.warning("No HuggingFace API key found for audio scanning.")
+        return None
+
+    headers = {"Authorization": f"Bearer {HF_API_KEY}"}
+    url = "https://api-inference.huggingface.co/models/mrfakename/Cloned-Voice-Detector"
+
+    async with httpx.AsyncClient(timeout=25.0) as client:
+        try:
+            response = await client.post(url, headers=headers, content=audio_bytes)
+            if response.status_code == 200:
+                results = response.json()
+                
+                if isinstance(results, list) and len(results) > 0 and isinstance(results[0], list):
+                    results = results[0]
+
+                if isinstance(results, list) and len(results) > 0:
+                    fake_prob = None
+                    real_prob = None
+
+                    for item in results:
+                        label = str(item.get("label", "")).strip().lower()
+                        score = float(item.get("score", 0.5))
+
+                        if label in ("fake", "synthetic", "cloned", "spoof", "label_1"):
+                            fake_prob = score
+                        elif label in ("real", "original", "human", "bonafide", "label_0"):
+                            real_prob = score
+
+                    if fake_prob is not None:
+                        return {"fake_prob": fake_prob, "real_prob": 1.0 - fake_prob}
+                    elif real_prob is not None:
+                        return {"fake_prob": 1.0 - real_prob, "real_prob": real_prob}
+        except Exception as e:
+            logger.error(f"Error calling audio HF model: {e}")
+            
+    return None
+

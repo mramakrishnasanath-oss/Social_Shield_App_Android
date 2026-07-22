@@ -86,6 +86,20 @@ async def delete_scan(
     except Exception as e:
         raise HTTPException(status_code=500, detail="Failed to delete scan")
 
+@router.delete("")
+async def clear_history(user_id: str = Depends(get_current_user)):
+    """Delete all scan history records for the current user"""
+    try:
+        db = get_db()
+        docs = list(db.collection("scan_history").where("user_id", "==", user_id).stream())
+        for doc in docs:
+            doc.reference.delete()
+        return {"message": "All scan history cleared successfully", "count": len(docs)}
+    except Exception as e:
+        logger.error(f"Clear history error: {e}")
+        raise HTTPException(status_code=500, detail="Failed to clear scan history")
+
+
 
 @router.get("/stats")
 async def get_user_stats(user_id: str = Depends(get_current_user)):

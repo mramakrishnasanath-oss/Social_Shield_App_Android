@@ -53,6 +53,7 @@ export const scanProfile = (data)   => api.post('/api/v1/scan/profile', data);
 export const getHistory    = (type)  => api.get('/api/v1/history', { params: type ? { media_type: type } : {} });
 export const getScanDetail = (id)    => api.get(`/api/v1/history/${id}`);
 export const deleteScan    = (id)    => api.delete(`/api/v1/history/${id}`);
+export const clearHistory  = ()      => api.delete('/api/v1/history');
 export const getUserStats  = ()      => api.get('/api/v1/stats');
 
 // ─── Health Check ─────────────────────────────────────────────────────────────

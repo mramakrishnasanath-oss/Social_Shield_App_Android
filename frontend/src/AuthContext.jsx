@@ -7,7 +7,9 @@ const AuthContext = createContext(null);
 // Check if Firebase env vars are configured
 const hasFirebaseConfig = !!(
   import.meta.env.VITE_FIREBASE_API_KEY &&
-  import.meta.env.VITE_FIREBASE_PROJECT_ID
+  import.meta.env.VITE_FIREBASE_API_KEY !== 'AIzaSy...' &&
+  import.meta.env.VITE_FIREBASE_PROJECT_ID &&
+  import.meta.env.VITE_FIREBASE_PROJECT_ID !== 'your-project-id'
 );
 
 // ─── Provider ─────────────────────────────────────────────────────────────────
@@ -139,8 +141,31 @@ export function AuthProvider({ children }) {
     setUser(null);
   };
 
+  // ─── Update User Fields ────────────────────────────────────────────────────────
+  const updateUser = async (fields) => {
+    if (hasFirebaseConfig) {
+      try {
+        const { getApps } = await import('firebase/app');
+        const { getAuth, updateProfile } = await import('firebase/auth');
+        if (getApps().length) {
+          const auth = getAuth(getApps()[0]);
+          if (auth.currentUser && fields.displayName) {
+            await updateProfile(auth.currentUser, { displayName: fields.displayName });
+          }
+        }
+      } catch (err) {
+        console.error("Firebase profile update failed:", err);
+      }
+    }
+    setUser((u) => {
+      const next = { ...u, ...fields };
+      localStorage.setItem('ss_user', JSON.stringify(next));
+      return next;
+    });
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, backendOnline, login, signUp, loginWithGoogle, logout }}>
+    <AuthContext.Provider value={{ user, loading, backendOnline, login, signUp, loginWithGoogle, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

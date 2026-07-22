@@ -9,6 +9,7 @@ from datetime import datetime
 
 from utils.auth import get_current_user
 from models.scan_result import ScanResult, MediaType, VerdictLevel
+from utils.huggingface import scan_audio_with_hf
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -29,10 +30,19 @@ async def scan_audio(
     if len(contents) > 100 * 1024 * 1024:
         raise HTTPException(status_code=413, detail="Audio too large (max 100MB)")
 
-    # Deterministic mock based on file size
-    seed = len(contents) % 100
-    fake_prob = min(0.99, max(0.01, seed / 100.0))
-    real_prob = 1.0 - fake_prob
+    # Try Hugging Face Inference API
+    hf_result = await scan_audio_with_hf(contents)
+    
+    if hf_result is not None:
+        fake_prob = hf_result.get("fake_prob", 0.5)
+        real_prob = hf_result.get("real_prob", 0.5)
+        meta_info = "Analyzed via HuggingFace Inference API (Voice Clone Detector)"
+    else:
+        # Fallback to deterministic mock
+        seed = len(contents) % 100
+        fake_prob = min(0.99, max(0.01, seed / 100.0))
+        real_prob = 1.0 - fake_prob
+        meta_info = "Mocked audio analysis (free tier/HF API Failed)"
 
     if fake_prob >= 0.65:
         verdict = VerdictLevel.FAKE
@@ -65,6 +75,7 @@ async def scan_audio(
         risk_level=risk,
         explanations=explanations,
         metadata={
+            "info": meta_info,
             "segments_analyzed": 6,
             "audio_features": {
                 "mfcc_std": round(3.5 + fake_prob * 5, 2),
