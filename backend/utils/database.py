@@ -191,21 +191,34 @@ async def save_scan_result_and_update_stats(user_id: str, scan_id: str, result: 
     try:
         db = get_db()
         
+        # Extract string values from Enums if present
+        media_type = result.get("media_type")
+        if hasattr(media_type, "value"):
+            media_type = media_type.value
+        elif hasattr(media_type, "name"):
+            media_type = media_type.name
+            
+        verdict = result.get("verdict")
+        if hasattr(verdict, "value"):
+            verdict = verdict.value
+        elif hasattr(verdict, "name"):
+            verdict = verdict.name
+            
         # Map snake_case to camelCase for Android and shared database compatibility
         result_camel = {
-            "scanId": result.get("scan_id") or scan_id,
-            "userId": result.get("user_id") or user_id,
-            "mediaType": result.get("media_type") or "IMAGE",
-            "verdict": result.get("verdict") or "SAFE",
-            "confidence": result.get("confidence") or 100.0,
-            "fakeProbability": result.get("fake_probability") or 0.0,
-            "realProbability": result.get("real_probability") or 100.0,
-            "riskLevel": result.get("risk_level") or "LOW",
-            "explanations": result.get("explanations") or [],
-            "recommendations": result.get("recommendations") or [],
+            "scanId": str(result.get("scan_id") or scan_id),
+            "userId": str(result.get("user_id") or user_id),
+            "mediaType": str(media_type or "IMAGE"),
+            "verdict": str(verdict or "SAFE"),
+            "confidence": float(result.get("confidence") or 100.0),
+            "fakeProbability": float(result.get("fake_probability") or 0.0),
+            "realProbability": float(result.get("real_probability") or 100.0),
+            "riskLevel": str(result.get("risk_level") or "LOW"),
+            "explanations": [str(e) for e in (result.get("explanations") or [])],
+            "recommendations": [str(r) for r in (result.get("recommendations") or [])],
             "heatmapBase64": result.get("heatmap_base64"),
             "metadata": result.get("metadata"),
-            "timestamp": result.get("timestamp")
+            "timestamp": str(result.get("timestamp"))
         }
         
         # 1. Save scan to subcollection
