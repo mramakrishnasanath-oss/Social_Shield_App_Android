@@ -31,7 +31,10 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Security(
     """Verify Firebase JWT token and return user_id"""
     if not _firebase_initialized:
         # Dev mode: accept any token, return it as user_id
-        return credentials.credentials[:28] if len(credentials.credentials) > 28 else "dev_user"
+        token = credentials.credentials
+        if token.startswith("demo_"):
+            return token.replace("demo_", "")
+        return token[:28] if len(token) > 28 else "dev_user"
     
     try:
         decoded = firebase_auth.verify_id_token(credentials.credentials)
@@ -42,7 +45,8 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Security(
 
 def verify_token(token: str) -> dict:
     if not _firebase_initialized:
-        return {"uid": "dev_user"}
+        uid = token.replace("demo_", "") if token.startswith("demo_") else "dev_user"
+        return {"uid": uid}
     try:
         return firebase_auth.verify_id_token(token)
     except Exception:
