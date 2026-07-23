@@ -3,7 +3,7 @@
    Backend: https://socialsheild.onrender.com
    ══════════════════════════════════ */
 
-const API_BASE = "https://socialsheild.onrender.com";
+const API_BASE = "https://socialshield-backend.onrender.com";
 // Dev mode: backend accepts any token when Firebase is not initialized
 const DEV_TOKEN = "dev_user_web_token_12345678901234567890";
 
