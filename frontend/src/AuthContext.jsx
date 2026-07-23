@@ -68,8 +68,9 @@ export function AuthProvider({ children }) {
     } else {
       // ── Demo mode (no Firebase configured) ──
       await new Promise((r) => setTimeout(r, 700));
-      const token = 'demo_' + Date.now();
-      const userData = { uid: 'dev_user', email, displayName: email.split('@')[0] };
+      const cleanEmail = email.replace(/[^a-zA-Z0-9]/g, '_');
+      const token = 'demo_' + cleanEmail;
+      const userData = { uid: cleanEmail, email, displayName: email.split('@')[0] };
       persistUser(userData, token);
       return userData;
     }
