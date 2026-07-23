@@ -1,3 +1,4 @@
+# SocialShield Mobile E2E Testing Pipeline
 name: Android Mobile E2E Suite
 
 on:
