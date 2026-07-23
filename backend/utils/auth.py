@@ -44,7 +44,7 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Security(
         token = credentials.credentials
         if token.startswith("demo_"):
             return token.replace("demo_", "")
-        return token[:28] if len(token) > 28 else "dev_user"
+        return token
     
     try:
         decoded = firebase_auth.verify_id_token(credentials.credentials)
@@ -55,7 +55,7 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Security(
 
 def verify_token(token: str) -> dict:
     if not _firebase_initialized:
-        uid = token.replace("demo_", "") if token.startswith("demo_") else "dev_user"
+        uid = token.replace("demo_", "") if token.startswith("demo_") else token
         return {"uid": uid}
     try:
         return firebase_auth.verify_id_token(token)
