@@ -12,7 +12,20 @@
           "package_name": "com.socialshield"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "930673514003-3rn0fhmm6f0aojhtqcd6d36diaptctcf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.socialshield",
+            "certificate_hash": "b55230b6d699fea03a5d68d532e140725d3b5299"
+          }
+        },
+        {
+          "client_id": "930673514003-ee07dojnae3riegb08fi2mpp60jvo41o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDBCNyR4iEa7jBIfX1WMUkX7DNzBU4FMQA"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "930673514003-ee07dojnae3riegb08fi2mpp60jvo41o.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "930673514003-kr9u97ba4b80875edgr2me2abubrnpfo.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.social.sheild"
+              }
+            }
+          ]
         }
       }
     }

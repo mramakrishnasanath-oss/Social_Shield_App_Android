@@ -75,4 +75,8 @@ async def scan_video(file: UploadFile = File(...), user_id: str = Depends(get_cu
         metadata={"info": meta_info},
         timestamp=datetime.utcnow().isoformat(),
     )
+    
+    from utils.database import save_scan_result_and_update_stats
+    await save_scan_result_and_update_stats(user_id, result.scan_id, result.dict())
+    
     return result.dict()

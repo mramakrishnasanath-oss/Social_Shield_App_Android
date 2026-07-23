@@ -132,4 +132,7 @@ async def scan_text(
         timestamp=datetime.utcnow().isoformat()
     )
     
+    from utils.database import save_scan_result_and_update_stats
+    await save_scan_result_and_update_stats(user_id, result.scan_id, result.dict())
+    
     return result.dict()
