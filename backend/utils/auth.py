@@ -15,12 +15,22 @@ def init_firebase():
     global _firebase_initialized
     if not _firebase_initialized:
         try:
+            import json
+            cred_json = os.getenv("FIREBASE_CREDENTIALS_JSON")
+            if cred_json:
+                cred_dict = json.loads(cred_json)
+                cred = credentials.Certificate(cred_dict)
+                firebase_admin.initialize_app(cred)
+                _firebase_initialized = True
+                logger.info("Firebase initialized from env json")
+                return
+
             cred_path = os.getenv("FIREBASE_CREDENTIALS_PATH", "firebase-credentials.json")
             if os.path.exists(cred_path):
                 cred = credentials.Certificate(cred_path)
                 firebase_admin.initialize_app(cred)
                 _firebase_initialized = True
-                logger.info("Firebase initialized")
+                logger.info("Firebase initialized from file")
             else:
                 logger.warning("Firebase credentials not found — auth disabled in dev mode")
         except Exception as e:
