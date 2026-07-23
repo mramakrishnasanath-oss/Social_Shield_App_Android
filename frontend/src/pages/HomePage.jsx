@@ -27,19 +27,14 @@ export default function HomePage() {
   const [statsLoading, setStatsLoading] = useState(true);
 
   useEffect(() => {
-    // Try API, fall back to demo data
     getUserStats()
       .then((r) => setStats(r.data))
-      .catch(() => setStats({ totalScans: 42, fakeDetected: 7, suspiciousDetected: 5, trustScore: 83 }))
+      .catch(() => setStats({ totalScans: 0, fakeDetected: 0, suspiciousDetected: 0, trustScore: 100 }))
       .finally(() => setStatsLoading(false));
 
     getHistory()
       .then((r) => setRecent(r.data?.items?.slice(0, 4) || []))
-      .catch(() => setRecent([
-        { scanId: '1', mediaType: 'IMAGE', verdict: 'FAKE',       confidence: 94.2, timestamp: new Date().toISOString() },
-        { scanId: '2', mediaType: 'URL',   verdict: 'SUSPICIOUS',  confidence: 78.5, timestamp: new Date().toISOString() },
-        { scanId: '3', mediaType: 'TEXT',  verdict: 'REAL',        confidence: 89.1, timestamp: new Date().toISOString() },
-      ]));
+      .catch(() => setRecent([]));
   }, []);
 
   const scoreColor = stats.trustScore >= 80 ? '#06FFA5' : stats.trustScore >= 50 ? '#FFB800' : '#FF3B3B';
