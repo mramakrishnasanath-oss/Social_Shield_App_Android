@@ -65,7 +65,14 @@ async def root():
 
 @app.get("/health")
 async def health():
-    return {"status": "healthy", "models": "loaded"}
+    from utils.auth import _firebase_initialized
+    from utils.database import _db
+    return {
+        "status": "healthy",
+        "models": "loaded",
+        "firebase_initialized": _firebase_initialized,
+        "database_type": "firestore" if _db is not None else "mock_json"
+    }
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
