@@ -107,21 +107,12 @@ class HomeViewModel @Inject constructor(
             repo.getUserStatsFlow().collect { stats ->
                 if (stats != null) {
                     _uiState.update {
-                        if (stats.totalScans == 0) {
-                            it.copy(
-                                trustScore = 85,
-                                totalScans = 15,
-                                fakeDetected = 2,
-                                suspiciousDetected = 3
-                            )
-                        } else {
-                            it.copy(
-                                trustScore = stats.trustScore,
-                                totalScans = stats.totalScans,
-                                fakeDetected = stats.fakeDetected,
-                                suspiciousDetected = stats.suspiciousDetected
-                            )
-                        }
+                        it.copy(
+                            trustScore = stats.trustScore,
+                            totalScans = stats.totalScans,
+                            fakeDetected = stats.fakeDetected,
+                            suspiciousDetected = stats.suspiciousDetected
+                        )
                     }
                 }
             }
@@ -131,11 +122,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             repo.getHistoryFlow().collect { history ->
                 _uiState.update {
-                    if (history.isEmpty()) {
-                        it.copy(recentScans = DEMO_HISTORY)
-                    } else {
-                        it.copy(recentScans = history)
-                    }
+                    it.copy(recentScans = history)
                 }
             }
         }
