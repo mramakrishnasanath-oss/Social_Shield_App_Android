@@ -23,8 +23,8 @@ import com.socialshield.domain.models.ScanType
 import com.socialshield.ui.screens.*
 import com.socialshield.ui.theme.*
 import com.socialshield.data.repository.PreferencesManager
-import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
+import android.os.Build
+import com.socialshield.utils.NotificationHelper
 import androidx.compose.ui.draw.scale
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.ui.Alignment
@@ -34,6 +34,8 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.shape.RoundedCornerShape
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -46,6 +48,15 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        // Initialize Notification Channel
+        NotificationHelper.createNotificationChannel(this)
+        
+        // Request post notifications permission on Android 13+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 101)
+        }
+        
         setContent {
             val isDarkTheme by preferencesManager.darkModeFlow.collectAsState(initial = true)
             

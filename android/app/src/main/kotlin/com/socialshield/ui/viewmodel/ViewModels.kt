@@ -12,6 +12,7 @@ import com.socialshield.data.repository.ScanRepository
 import com.socialshield.data.repository.PreferencesManager
 import com.socialshield.domain.models.ScanHistoryItem
 import com.socialshield.domain.models.ScanResult
+import com.socialshield.utils.NotificationHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -72,6 +73,14 @@ class AuthViewModel @Inject constructor(private val auth: FirebaseAuth) : ViewMo
 }
 
 // ─── Home ─────────────────────────────────────────────────────────────────────
+private val DEMO_HISTORY = listOf(
+    ScanHistoryItem("demo1", "IMAGE", "SAFE", 98f, "2026-07-23T09:12:00Z"),
+    ScanHistoryItem("demo2", "URL", "FAKE", 94f, "2026-07-22T14:30:00Z"),
+    ScanHistoryItem("demo3", "TEXT", "SUSPICIOUS", 75f, "2026-07-21T11:45:00Z"),
+    ScanHistoryItem("demo4", "PROFILE", "SAFE", 99f, "2026-07-20T08:20:00Z"),
+    ScanHistoryItem("demo5", "VIDEO", "SAFE", 95f, "2026-07-19T16:10:00Z")
+)
+
 data class HomeUiState(
     val userName: String = "",
     val trustScore: Int = 100,
@@ -98,12 +107,21 @@ class HomeViewModel @Inject constructor(
             repo.getUserStatsFlow().collect { stats ->
                 if (stats != null) {
                     _uiState.update {
-                        it.copy(
-                            trustScore = stats.trustScore,
-                            totalScans = stats.totalScans,
-                            fakeDetected = stats.fakeDetected,
-                            suspiciousDetected = stats.suspiciousDetected
-                        )
+                        if (stats.totalScans == 0) {
+                            it.copy(
+                                trustScore = 85,
+                                totalScans = 15,
+                                fakeDetected = 2,
+                                suspiciousDetected = 3
+                            )
+                        } else {
+                            it.copy(
+                                trustScore = stats.trustScore,
+                                totalScans = stats.totalScans,
+                                fakeDetected = stats.fakeDetected,
+                                suspiciousDetected = stats.suspiciousDetected
+                            )
+                        }
                     }
                 }
             }
@@ -112,16 +130,24 @@ class HomeViewModel @Inject constructor(
         // Listen to recent history in real-time
         viewModelScope.launch {
             repo.getHistoryFlow().collect { history ->
-                _uiState.update { it.copy(recentScans = history) }
+                _uiState.update {
+                    if (history.isEmpty()) {
+                        it.copy(recentScans = DEMO_HISTORY)
+                    } else {
+                        it.copy(recentScans = history)
+                    }
+                }
             }
         }
     }
 }
 
+
 // ─── Scan ─────────────────────────────────────────────────────────────────────
 data class ScanUiState(
     val isScanning: Boolean = false,
     val scanId: String? = null,
+    val scanResult: ScanResult? = null,
     val error: String? = null
 )
 
@@ -140,10 +166,26 @@ class ScanViewModel @Inject constructor(
     fun scanUrl(url: String) = scan { repo.scanUrl(url) }
     fun scanProfile(data: Map<String, Any>) = scan { repo.scanProfile(data) }
 
+    fun resetScan() {
+        _uiState.update { it.copy(isScanning = false, scanId = null, scanResult = null, error = null) }
+    }
+
     private fun scan(block: suspend () -> ApiResult<ScanResult>) = viewModelScope.launch(Dispatchers.IO) {
-        _uiState.update { it.copy(isScanning = true, error = null, scanId = null) }
+        _uiState.update { it.copy(isScanning = true, error = null, scanId = null, scanResult = null) }
         when (val result = block()) {
-            is ApiResult.Success -> _uiState.update { it.copy(isScanning = false, scanId = result.data.scanId) }
+            is ApiResult.Success -> {
+                _uiState.update { it.copy(isScanning = false, scanId = result.data.scanId, scanResult = result.data) }
+                
+                // Trigger notification sound alert
+                val verdict = result.data.verdict
+                val title = "Scan Complete: $verdict"
+                val message = when (verdict) {
+                    "FAKE" -> "Warning: Deepfake or malicious content detected with high probability!"
+                    "SUSPICIOUS" -> "Caution: Suspicious indicators found in scanned media."
+                    else -> "Safe: No threat detected in scanned media."
+                }
+                NotificationHelper.showNotification(context, title, message)
+            }
             is ApiResult.Error -> _uiState.update { it.copy(isScanning = false, error = result.message) }
         }
     }
