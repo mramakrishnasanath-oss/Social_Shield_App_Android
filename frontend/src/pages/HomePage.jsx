@@ -28,7 +28,15 @@ export default function HomePage() {
 
   useEffect(() => {
     getUserStats()
-      .then((r) => setStats(r.data))
+      .then((r) => {
+        const data = r.data;
+        setStats({
+          totalScans: data.total_scans ?? data.totalScans ?? 0,
+          fakeDetected: data.fake_detected ?? data.fakeDetected ?? 0,
+          suspiciousDetected: data.suspicious_detected ?? data.suspiciousDetected ?? 0,
+          trustScore: data.trust_score ?? data.trustScore ?? 100,
+        });
+      })
       .catch(() => setStats({ totalScans: 0, fakeDetected: 0, suspiciousDetected: 0, trustScore: 100 }))
       .finally(() => setStatsLoading(false));
 

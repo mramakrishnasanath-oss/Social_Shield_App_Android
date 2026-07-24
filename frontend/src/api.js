@@ -21,8 +21,40 @@ api.interceptors.request.use((config) => {
 });
 
 // ─── Response Error Handler ───────────────────────────────────────────────────
+// ─── Helper: Convert Snake Case Keys to Camel Case ────────────────────────────
+const toCamel = (str) => {
+  return str.replace(/([-_][a-z])/ig, ($1) => {
+    return $1.toUpperCase()
+      .replace('-', '')
+      .replace('_', '');
+  });
+};
+
+const isObject = (obj) => {
+  return obj === Object(obj) && !Array.isArray(obj) && typeof obj !== 'function';
+};
+
+const keysToCamel = (obj) => {
+  if (isObject(obj)) {
+    const n = {};
+    Object.keys(obj).forEach((k) => {
+      n[toCamel(k)] = keysToCamel(obj[k]);
+    });
+    return n;
+  } else if (Array.isArray(obj)) {
+    return obj.map((i) => keysToCamel(i));
+  }
+  return obj;
+};
+
+// ─── Response Interceptor ─────────────────────────────────────────────────────
 api.interceptors.response.use(
-  (res) => res,
+  (res) => {
+    if (res.data) {
+      res.data = keysToCamel(res.data);
+    }
+    return res;
+  },
   (err) => {
     if (err.response?.status === 401) {
       // Token expired — clear auth and reload
