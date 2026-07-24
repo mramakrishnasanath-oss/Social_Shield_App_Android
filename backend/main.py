@@ -66,12 +66,13 @@ async def root():
 @app.get("/health")
 async def health():
     from utils.auth import _firebase_initialized
-    from utils.database import _db
+    from utils.database import _db, _last_db_error
     return {
         "status": "healthy",
         "models": "loaded",
         "firebase_initialized": _firebase_initialized,
-        "database_type": "firestore" if _db is not None else "mock_json"
+        "database_type": "firestore" if _db is not None else "mock_json",
+        "last_db_error": _last_db_error
     }
 
 if __name__ == "__main__":

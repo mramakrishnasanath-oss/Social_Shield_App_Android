@@ -8,6 +8,7 @@ from firebase_admin import firestore
 logger = logging.getLogger(__name__)
 _db = None
 _mock_db_instance = None
+_last_db_error = None
 
 
 class MockDocument:
@@ -270,4 +271,6 @@ async def save_scan_result_and_update_stats(user_id: str, scan_id: str, result: 
         logger.info(f"Scan {scan_id} saved and stats updated successfully for user {user_id}")
         
     except Exception as e:
+        global _last_db_error
+        _last_db_error = str(e)
         logger.error(f"Failed to save scan result or update stats: {e}")
