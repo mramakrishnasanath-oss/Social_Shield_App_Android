@@ -156,14 +156,27 @@ async def get_user_stats(user_id: str = Depends(get_current_user)):
         docs = list(db.collection("users").document(user_id).collection("scans").stream())
         
         total = len(docs)
-        fake_count = sum(1 for d in docs if d.to_dict().get('verdict') == 'FAKE')
-        suspicious = sum(1 for d in docs if d.to_dict().get('verdict') == 'SUSPICIOUS')
+        fake_count = sum(1 for d in docs if str(d.to_dict().get('verdict')).upper() == 'FAKE')
+        suspicious = sum(1 for d in docs if str(d.to_dict().get('verdict')).upper() == 'SUSPICIOUS')
+        safe_count = sum(1 for d in docs if str(d.to_dict().get('verdict')).upper() == 'SAFE')
         
         trust_score = 100
         if total > 0:
             threat_rate = (fake_count + suspicious * 0.5) / total
             trust_score = max(0, int(100 - threat_rate * 100))
         
+        # Self-healing: Update the main users stats document with correct calculated values
+        try:
+            db.collection("users").document(user_id).set({
+                "totalScans": total,
+                "fakeDetected": fake_count,
+                "suspiciousDetected": suspicious,
+                "safeDetected": safe_count,
+                "trustScore": trust_score
+            }, merge=True)
+        except Exception as db_err:
+            logger.error(f"Self-healing stats update failed: {db_err}")
+            
         return {
             "total_scans": total,
             "fake_detected": fake_count,
