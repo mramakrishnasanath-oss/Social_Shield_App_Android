@@ -234,9 +234,8 @@ class ScanRepository @Inject constructor(
         file.delete()
         val body = response.body()
         if (response.isSuccessful && body != null) {
-            val savedResult = saveScanToFirestore(body)
-            cachedResult = savedResult
-            ApiResult.Success(savedResult)
+            cachedResult = body
+            ApiResult.Success(body)
         } else {
             ApiResult.Error("Server error: ${response.code()} or empty response")
         }
@@ -250,9 +249,8 @@ class ScanRepository @Inject constructor(
         file.delete()
         val body = response.body()
         if (response.isSuccessful && body != null) {
-            val savedResult = saveScanToFirestore(body)
-            cachedResult = savedResult
-            ApiResult.Success(savedResult)
+            cachedResult = body
+            ApiResult.Success(body)
         } else {
             ApiResult.Error("Server error: ${response.code()} or empty response")
         }
@@ -266,9 +264,8 @@ class ScanRepository @Inject constructor(
         file.delete()
         val body = response.body()
         if (response.isSuccessful && body != null) {
-            val savedResult = saveScanToFirestore(body)
-            cachedResult = savedResult
-            ApiResult.Success(savedResult)
+            cachedResult = body
+            ApiResult.Success(body)
         } else {
             ApiResult.Error("Server error: ${response.code()} or empty response")
         }
@@ -279,9 +276,8 @@ class ScanRepository @Inject constructor(
         val response = api.scanText(mapOf("text" to text), token)
         val body = response.body()
         if (response.isSuccessful && body != null) {
-            val savedResult = saveScanToFirestore(body)
-            cachedResult = savedResult
-            ApiResult.Success(savedResult)
+            cachedResult = body
+            ApiResult.Success(body)
         } else {
             ApiResult.Error("Server error: ${response.code()} or empty response")
         }
@@ -292,9 +288,8 @@ class ScanRepository @Inject constructor(
         val response = api.scanUrl(mapOf("url" to url), token)
         val body = response.body()
         if (response.isSuccessful && body != null) {
-            val savedResult = saveScanToFirestore(body)
-            cachedResult = savedResult
-            ApiResult.Success(savedResult)
+            cachedResult = body
+            ApiResult.Success(body)
         } else {
             ApiResult.Error("Server error: ${response.code()} or empty response")
         }
@@ -305,9 +300,8 @@ class ScanRepository @Inject constructor(
         val response = api.scanProfile(data, token)
         val body = response.body()
         if (response.isSuccessful && body != null) {
-            val savedResult = saveScanToFirestore(body, data)
-            cachedResult = savedResult
-            ApiResult.Success(savedResult)
+            cachedResult = body
+            ApiResult.Success(body)
         } else {
             ApiResult.Error("Server error: ${response.code()} or empty response")
         }
